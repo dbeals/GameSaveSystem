@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSaveSystem", "GameSaveSystem\GameSaveSystem.csproj", "{992AE2E2-BC51-4228-952A-210CAF17B406}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSaveSystemTests", "GameSaveSystemTests\GameSaveSystemTests.csproj", "{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A960FBD7-BB30-495B-ADEC-8B3DA4889125}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		UNLICENSE.md = UNLICENSE.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{992AE2E2-BC51-4228-952A-210CAF17B406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992AE2E2-BC51-4228-952A-210CAF17B406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992AE2E2-BC51-4228-952A-210CAF17B406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992AE2E2-BC51-4228-952A-210CAF17B406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

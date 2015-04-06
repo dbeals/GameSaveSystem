@@ -9,9 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSaveSystemTests", "Game
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A960FBD7-BB30-495B-ADEC-8B3DA4889125}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
 		README.md = README.md
-		UNLICENSE.md = UNLICENSE.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{AD987339-0A7C-4ADA-BAA7-5D6D5545435F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamplesCore", "Examples\ExamplesCore\ExamplesCore.csproj", "{6B03371A-A8D2-4CBC-BF99-57B189512D6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAdventure", "Examples\TextAdventure\TextAdventure.csproj", "{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +33,20 @@ Global
 		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D802ED2A-3A21-4E4A-930B-E56F4C0C5EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B03371A-A8D2-4CBC-BF99-57B189512D6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B03371A-A8D2-4CBC-BF99-57B189512D6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B03371A-A8D2-4CBC-BF99-57B189512D6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B03371A-A8D2-4CBC-BF99-57B189512D6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B03371A-A8D2-4CBC-BF99-57B189512D6B} = {AD987339-0A7C-4ADA-BAA7-5D6D5545435F}
+		{B21C0B53-A9B3-4C1B-B73E-02D2DD3C9C63} = {AD987339-0A7C-4ADA-BAA7-5D6D5545435F}
 	EndGlobalSection
 EndGlobal

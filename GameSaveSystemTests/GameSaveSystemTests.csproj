@@ -36,8 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\Assemblies\Windows\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.4.369, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.SharpZipLib.dll.0.85.4.369\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -58,12 +59,17 @@
     <Compile Include="SaveManager.cs" />
     <Compile Include="SaveManagerBaseTest.cs" />
     <Compile Include="ExportImportTest.cs" />
+    <Compile Include="SwapSaveManager.cs" />
+    <Compile Include="SwapSaveManagerBaseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameSaveSystem\GameSaveSystem.csproj">
       <Project>{992ae2e2-bc51-4228-952a-210caf17b406}</Project>
       <Name>GameSaveSystem</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

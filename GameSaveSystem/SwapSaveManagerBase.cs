@@ -26,12 +26,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org/>
 ************************************************************************
 Author: Donald Beals
-Date: March 29th, 2015
-Description: This is a simple incremental save manager with auto-save options.
+Date: April 25th, 2015
+Description: This is a simple save-swap save manager with auto-save options.
 ****************************** Change Log ******************************
-3/29/2015 - Created initial file. (dbeals)
-4/25/2015 - Moved import/export content to ImportExportHelper. (dbeals)
-4/25/2015 - Moved CleanseSaveByBaseName to SafeSaveHelper. (dbeals)
+4/25/2015 - Created initial file. (dbeals)
 ***********************************************************************/
 #endregion
 
@@ -43,7 +41,10 @@ using System.Collections.Generic;
 
 namespace GameSaveSystem
 {
-	public abstract class SaveManagerBase
+	/// <summary>
+	/// 
+	/// </summary>
+	public abstract class SwapSaveManagerBase
 	{
 		#region Variables
 		private float autoSaveTimeElapsedInSeconds;
@@ -83,18 +84,6 @@ namespace GameSaveSystem
 			set;
 		}
 
-		public int MaximumAutoSaveCount
-		{
-			get;
-			set;
-		}
-
-		public int MaximumSafeSaveCount
-		{
-			get;
-			set;
-		}
-
 		public bool IsAutoSaveEnabled
 		{
 			get;
@@ -111,13 +100,11 @@ namespace GameSaveSystem
 		#endregion
 
 		#region Constructors
-		protected SaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds, int maximumAutoSaveCount, int maximumSafeSaveCount)
+		protected SwapSaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds)
 		{
 			RootPath = rootPath;
 			AutoSaveFileNamePrefix = autoSaveFileNamePrefix;
 			AutoSaveIntervalInSeconds = autoSaveIntervalInSeconds;
-			MaximumAutoSaveCount = maximumAutoSaveCount;
-			MaximumSafeSaveCount = maximumSafeSaveCount;
 		}
 		#endregion
 
@@ -127,17 +114,17 @@ namespace GameSaveSystem
 
 		public void SaveGame(string fileNameWithoutExtension)
 		{
-			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), MaximumSafeSaveCount, OnSaveRequested);
+			SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveRequested);
 		}
 
 		public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
 		{
-			SafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
+			SwapSafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
 		}
 
 		public void AutoSave()
 		{
-			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, OnSaveRequested);
+			SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), OnSaveRequested);
 		}
 
 		public void Export(string exportFileName, int compressionLevel = 3, string password = null)

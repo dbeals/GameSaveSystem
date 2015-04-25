@@ -27,9 +27,10 @@ For more information, please refer to <http://unlicense.org/>
 ************************************************************************
 Author: Donald Beals
 Date: March 29th, 2015
-Description: This is a simple auto-save manager.
+Description: The core implementations of the incremental safe-save system.
 ****************************** Change Log ******************************
 3/29/2015 - Created initial file. (dbeals)
+4/25/2015 - Corrected description. (dbeals)
 ***********************************************************************/
 #endregion
 
@@ -207,7 +208,21 @@ namespace GameSaveSystem
 					orderby GetFileSortValue(fileInfo) descending
 					group fileInfo by GetBaseFileName(fileInfo.Name) into fileGroup
 					select new KeyValuePair<string, string>(fileGroup.Key, fileGroup.First().Name));
-			;
+		}
+
+		/// <summary>
+		/// Deletes all save files in <paramref name="rootPath"/> based on the base name (FileName.Extension) provided.
+		/// </summary>
+		/// <param name="rootPath">The root path to the save folder.</param>
+		/// <param name="baseFileName">The base file name (FileName.Extension) to delete.</param>
+		public static void CleanseSaveByBaseName(string rootPath, string baseFileName)
+		{
+			var directoryInfo = new DirectoryInfo(rootPath);
+			var files = (from file in directoryInfo.EnumerateFiles(SafeSaveHelper.GetSearchPatternFromFileName(baseFileName))
+						 select file).ToArray();
+
+			foreach(var file in files)
+				file.Delete();
 		}
 	}
 }

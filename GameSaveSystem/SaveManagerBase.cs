@@ -111,6 +111,11 @@ namespace GameSaveSystem
 		#endregion
 
 		#region Constructors
+		protected SaveManagerBase()
+			: this("Saves/", "Auto Save", 900f, 3, 3)
+		{
+		}
+
 		protected SaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds, int maximumAutoSaveCount, int maximumSafeSaveCount)
 		{
 			RootPath = rootPath;

@@ -1,76 +1,66 @@
-﻿#region File Header
-/***********************************************************************
-This is free and unencumbered software released into the public domain.
+﻿// /***********************************************************************
+// This is free and unencumbered software released into the public domain.
+// 
+// Anyone is free to copy, modify, publish, use, compile, sell, or
+// distribute this software, either in source code form or as a compiled
+// binary, for any purpose, commercial or non-commercial, and by any
+// means.
+// 
+// In jurisdictions that recognize copyright laws, the author or authors
+// of this software dedicate any and all copyright interest in the
+// software to the public domain. We make this dedication for the benefit
+// of the public at large and to the detriment of our heirs and
+// successors. We intend this dedication to be an overt act of
+// relinquishment in perpetuity of all present and future rights to this
+// software under copyright law.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+// 
+// For more information, please refer to <http://unlicense.org/>
+// ***********************************************************************/
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <http://unlicense.org/>
-************************************************************************
-Author: Donald Beals
-Date: April 25th, 2015
-Description: The core implementations of the import/export system.
-****************************** Change Log ******************************
-4/25/2015 - Created initial file. (dbeals)
-***********************************************************************/
-#endregion
-
-#region Using Statements
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
-#endregion
 
 namespace GameSaveSystem
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public static class ImportExportHelper
 	{
+		#region Methods
 		public static void Export(string rootPath, IEnumerable<KeyValuePair<string, string>> saveFiles, string exportFileName, int compressionLevel = 3, string password = null)
 		{
-			using(var fileStream = File.Create(exportFileName))
+			using (var fileStream = File.Create(exportFileName))
 			{
-				using(var outputStream = new ZipOutputStream(fileStream))
+				using (var outputStream = new ZipOutputStream(fileStream))
 				{
 					outputStream.SetLevel(compressionLevel);
 					outputStream.Password = password;
-					foreach(var file in saveFiles)
+					foreach (var file in saveFiles)
 					{
 						var fileName = file.Key.Replace('\\', '/');
 						var fileInfo = new FileInfo(Path.Combine(rootPath, file.Value));
 						var entry = new ZipEntry(ZipEntry.CleanName(fileName))
 						{
 							DateTime = fileInfo.LastWriteTime,
-							Size = fileInfo.Length,
+							Size = fileInfo.Length
 						};
 						outputStream.PutNextEntry(entry);
 
 						var buffer = new byte[4096];
-						using(var streamReader = fileInfo.OpenRead())
+						using (var streamReader = fileInfo.OpenRead())
 						{
-							ICSharpCode.SharpZipLib.Core.StreamUtils.Copy(streamReader, outputStream, buffer);
+							StreamUtils.Copy(streamReader, outputStream, buffer);
 						}
+
 						outputStream.CloseEntry();
 					}
 				}
@@ -79,32 +69,33 @@ namespace GameSaveSystem
 
 		public static void Import(string rootPath, string importFileName, Func<string, string> getOutputFileName)
 		{
-			using(var streamReader = File.OpenRead(importFileName))
+			using (var streamReader = File.OpenRead(importFileName))
 			{
 				var zipFile = new ZipFile(streamReader);
 
-				foreach(ZipEntry entry in zipFile)
+				foreach (ZipEntry entry in zipFile)
 				{
-					if(!entry.IsFile)
+					if (!entry.IsFile)
 						continue;
 
 					var entryName = entry.Name;
 
 					var buffer = new byte[4096];
-					using(var inputStream = zipFile.GetInputStream(entry))
+					using (var inputStream = zipFile.GetInputStream(entry))
 					{
 						var fullZipToPath = Path.Combine(rootPath, getOutputFileName(entry.Name));
 						var directoryName = Path.GetDirectoryName(fullZipToPath);
-						if(directoryName.Length > 0)
+						if (directoryName.Length > 0)
 							Directory.CreateDirectory(directoryName);
 
-						using(var streamWriter = File.Create(fullZipToPath))
+						using (var streamWriter = File.Create(fullZipToPath))
 						{
-							ICSharpCode.SharpZipLib.Core.StreamUtils.Copy(inputStream, streamWriter, buffer);
+							StreamUtils.Copy(inputStream, streamWriter, buffer);
 						}
 					}
 				}
 			}
 		}
+		#endregion
 	}
 }

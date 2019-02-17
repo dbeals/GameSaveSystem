@@ -1,73 +1,51 @@
-﻿#region File Header
-/***********************************************************************
- * Copyright © 2015 Beals Software
- * All Rights Reserved
-************************************************************************
-Author: Donald Beals
-Date: Month Day, Year
-Description: TODO: Write a description of this file here.
-****************************** Change Log ******************************
-4/4/2015 3:36:02 PM - Created initial file. (dbeals)
-***********************************************************************/
-#endregion
+﻿// /***********************************************************************
+// This is free and unencumbered software released into the public domain.
+// 
+// Anyone is free to copy, modify, publish, use, compile, sell, or
+// distribute this software, either in source code form or as a compiled
+// binary, for any purpose, commercial or non-commercial, and by any
+// means.
+// 
+// In jurisdictions that recognize copyright laws, the author or authors
+// of this software dedicate any and all copyright interest in the
+// software to the public domain. We make this dedication for the benefit
+// of the public at large and to the detriment of our heirs and
+// successors. We intend this dedication to be an overt act of
+// relinquishment in perpetuity of all present and future rights to this
+// software under copyright law.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+// 
+// For more information, please refer to <http://unlicense.org/>
+// ***********************************************************************/
 
-#region Using Statements
 using System;
+using System.IO;
 using ExamplesCore;
-#endregion
+using TextAdventure.Data;
 
 namespace TextAdventure
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public sealed class GameState : GameStateBase
 	{
-		#region Variables
-		#endregion
-
 		#region Properties
-		public override string FileExtension
-		{
-			get
-			{
-				return ".gss-ta";
-			}
-		}
+		public override string FileExtension => ".gss-ta";
 
-		public override string FileKey
-		{
-			get
-			{
-				return "GSS-EX-TEXTADV";
-			}
-		}
+		public override string FileKey => "GSS-EX-TEXTADV";
 
-		public override Version CurrentVersion
-		{
-			get
-			{
-				return new Version(1, 0);
-			}
-		}
+		public override Version CurrentVersion => new Version(1, 0);
 
-		public Room CurrentRoom
-		{
-			get;
-			set;
-		}
+		public Room CurrentRoom { get; set; }
 
-		public string LastMessage
-		{
-			get;
-			set;
-		}
+		public string LastMessage { get; set; }
 
-		public bool LastMessageIsError
-		{
-			get;
-			set;
-		}
+		public bool LastMessageIsError { get; set; }
 		#endregion
 
 		#region Constructors
@@ -79,29 +57,6 @@ namespace TextAdventure
 		#endregion
 
 		#region Methods
-		#endregion
-
-		protected override void HandleLoadError(string filePath, LoadResult error)
-		{
-			LastMessageIsError = true;
-			LastMessage = "Failed to load save " + filePath + " : " + error.ToString();
-		}
-
-		protected override void SaveGame(System.IO.StreamWriter writer)
-		{
-			base.SaveGame(writer);
-			writer.WriteLine(CurrentRoom.Key);
-		}
-
-		protected override LoadResult LoadGame(System.IO.StreamReader reader, System.Version version)
-		{
-			var currentRoomKey = reader.ReadLine();
-			if((CurrentRoom = Data.Rooms.LoadRoom(currentRoomKey)) == null)
-				return LoadResult.ContentNotFound;
-
-			return LoadResult.Success;
-		}
-
 		public void StartGame(string roomKey)
 		{
 			ClearStateValues();
@@ -110,9 +65,9 @@ namespace TextAdventure
 
 		public void ChangeRoom(string roomKey)
 		{
-			CurrentRoom = Data.Rooms.LoadRoom(roomKey);
+			CurrentRoom = Rooms.LoadRoom(roomKey);
 			SetStateValue(roomKey + "-visited", true);
-			if(CurrentRoom.Entered != null)
+			if (CurrentRoom.Entered != null)
 				CurrentRoom.Entered(this);
 		}
 
@@ -120,5 +75,27 @@ namespace TextAdventure
 		{
 			CurrentRoom = null;
 		}
+
+		protected override void HandleLoadError(string filePath, LoadResult error)
+		{
+			LastMessageIsError = true;
+			LastMessage = "Failed to load save " + filePath + " : " + error;
+		}
+
+		protected override void SaveGame(StreamWriter writer)
+		{
+			base.SaveGame(writer);
+			writer.WriteLine(CurrentRoom.Key);
+		}
+
+		protected override LoadResult LoadGame(StreamReader reader, Version version)
+		{
+			var currentRoomKey = reader.ReadLine();
+			if ((CurrentRoom = Rooms.LoadRoom(currentRoomKey)) == null)
+				return LoadResult.ContentNotFound;
+
+			return LoadResult.Success;
+		}
+		#endregion
 	}
 }

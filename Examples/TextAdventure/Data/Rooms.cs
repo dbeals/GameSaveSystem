@@ -1,38 +1,48 @@
-﻿#region File Header
-/***********************************************************************
- * Copyright © 2015 Beals Software
- * All Rights Reserved
-************************************************************************
-Author: Donald Beals
-Date: Month Day, Year
-Description: TODO: Write a description of this file here.
-****************************** Change Log ******************************
-4/4/2015 4:06:07 PM - Created initial file. (dbeals)
-***********************************************************************/
-#endregion
+﻿// /***********************************************************************
+// This is free and unencumbered software released into the public domain.
+// 
+// Anyone is free to copy, modify, publish, use, compile, sell, or
+// distribute this software, either in source code form or as a compiled
+// binary, for any purpose, commercial or non-commercial, and by any
+// means.
+// 
+// In jurisdictions that recognize copyright laws, the author or authors
+// of this software dedicate any and all copyright interest in the
+// software to the public domain. We make this dedication for the benefit
+// of the public at large and to the detriment of our heirs and
+// successors. We intend this dedication to be an overt act of
+// relinquishment in perpetuity of all present and future rights to this
+// software under copyright law.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+// 
+// For more information, please refer to <http://unlicense.org/>
+// ***********************************************************************/
 
-#region Using Statements
 using System.Collections.ObjectModel;
-
-#endregion
 
 namespace TextAdventure.Data
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public static class Rooms
 	{
 		private sealed class RoomCollection : KeyedCollection<string, Room>
 		{
-			protected override string GetKeyForItem(Room item)
-			{
-				return item.Key;
-			}
+			#region Methods
+			protected override string GetKeyForItem(Room item) => item.Key;
+			#endregion
 		}
 
-		private static RoomCollection rooms = new RoomCollection();
+		#region Variables
+		private static readonly RoomCollection rooms = new RoomCollection();
+		#endregion
 
+		#region Constructors
 		static Rooms()
 		{
 			rooms.Add(new Room("intro", "Outside Cave Entrance", @"You stand at the entrance of a cave. Everyone says it's haunted, but you obviously don't believe them...wait, is that crying?",
@@ -53,7 +63,7 @@ There is a path to the north and a path to the east. The exit is behind you.",
 There is a path to the north and path to the south.",
 				new RoomAction("Go north", gameState => gameState.ChangeRoom("pit1-death")),
 				new RoomAction("Go back", gameState => gameState.ChangeRoom("inside-cave1")),
-				new RoomAction("Use Flashlight", gameState => gameState.ChangeRoom("pit1-lit"), gameState => gameState.StateValueExists("hallway1-visited") ? (bool)gameState.GetStateValue("hallway1-visited") : false)
+				new RoomAction("Use Flashlight", gameState => gameState.ChangeRoom("pit1-lit"), gameState => gameState.StateValueExists("hallway1-visited") ? (bool) gameState.GetStateValue("hallway1-visited") : false)
 			));
 
 			rooms.Add(new Room("pit1-death", "Dark Room", @"As you take a step forward, you feel yourself being pushed. You realise where that draft was coming from: there was a large hole in room.
@@ -62,21 +72,21 @@ You look up only to see the outline of a small child as you fall into the darkne
 				new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 			)
 			{
-				CanSave = false,
+				CanSave = false
 			});
 
 			rooms.Add(new Room("pit1-lit", "Pit Room", @"There is a large pit blocking the way to the north exit. You use the flashlight to peer into the pit, but all you can see is a large red pit at the bottom.",
 				new RoomAction("Go back", gameState => gameState.ChangeRoom("pit1-death2"))
 			)
 			{
-				CanSave = false,
+				CanSave = false
 			});
 
 			rooms.Add(new Room("pit1-death2", "Dark Room", @"You turn to leave and find yourself impeded by black figure about the size of a child. Startled you take a step back and find yourself falling. The last thing you hear is a child's giggle.",
 				new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 			)
 			{
-				CanSave = false,
+				CanSave = false
 			});
 
 			rooms.Add(new Room("hallway1", "Dark Hallway", @"You walk down the dark hallway, tripping over something. You feel around and find a flashlight.
@@ -98,26 +108,29 @@ You can continue down the hallway or head back the way you came.",
 				new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 			)
 			{
-				CanSave = false,
+				CanSave = false
 			});
 
 			rooms.Add(new Room("bone-room", "Dark Room", @"The crying seems to be getting quieter, but you're sure it's coming from this direction. You hear a small crunch as you walk into the room and then crying stops all together...replaced with the giggling of a small child. It's the last sound you hear as you feel a sharp pain in your back and fall to the floor.",
 				new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 			)
 			{
-				CanSave = false,
+				CanSave = false
 			});
 
 			rooms.Add(new Room("early-home", "Home", @"You decide the best choice is to just leave it alone and head home. You may never know what adventure you missed out on, but maybe that's for the best.",
 				new RoomAction("Start over", gameState => gameState.ChangeRoom("intro"))
 			));
 		}
+		#endregion
 
+		#region Methods
 		public static Room LoadRoom(string roomKey)
 		{
-			if(!rooms.Contains(roomKey))
+			if (!rooms.Contains(roomKey))
 				return null;
 			return rooms[roomKey];
 		}
+		#endregion
 	}
 }

@@ -1,48 +1,57 @@
-﻿#region File Header
-/***********************************************************************
- * Copyright © 2015 Beals Software
- * All Rights Reserved
-************************************************************************
-Author: Donald Beals
-Date: Month Day, Year
-Description: TODO: Write a description of this file here.
-****************************** Change Log ******************************
-4/6/2015 2:17:58 PM - Created initial file. (dbeals)
-***********************************************************************/
-#endregion
+﻿// /***********************************************************************
+// This is free and unencumbered software released into the public domain.
+// 
+// Anyone is free to copy, modify, publish, use, compile, sell, or
+// distribute this software, either in source code form or as a compiled
+// binary, for any purpose, commercial or non-commercial, and by any
+// means.
+// 
+// In jurisdictions that recognize copyright laws, the author or authors
+// of this software dedicate any and all copyright interest in the
+// software to the public domain. We make this dedication for the benefit
+// of the public at large and to the detriment of our heirs and
+// successors. We intend this dedication to be an overt act of
+// relinquishment in perpetuity of all present and future rights to this
+// software under copyright law.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+// 
+// For more information, please refer to <http://unlicense.org/>
+// ***********************************************************************/
 
-#region Using Statements
 using System;
 using System.Text;
 
-#endregion
-
 namespace TextAdventure
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public static class ConsoleHelper
 	{
+		#region Methods
 		public static string FitString(string input)
 		{
-			StringBuilder output = new StringBuilder(input);
+			var output = new StringBuilder(input);
 			var bufferWidth = Console.BufferWidth;
 			var lastSpaceIndex = 0;
 			var textWidth = 0;
-			for(var index = 0; index < output.Length; ++index)
+			for (var index = 0; index < output.Length; ++index)
 			{
 				var character = output[index];
-				if(character == ' ')
+				if (character == ' ')
 					lastSpaceIndex = index;
-				if(character == '\n')
+				if (character == '\n')
 				{
 					textWidth = 0;
 					lastSpaceIndex = 0;
 					continue;
 				}
 
-				if(textWidth + 1 > bufferWidth)
+				if (textWidth + 1 > bufferWidth)
 				{
 					output.Remove(lastSpaceIndex, 1);
 					output.Insert(lastSpaceIndex, Environment.NewLine);
@@ -72,5 +81,6 @@ namespace TextAdventure
 			Console.WriteLine(input);
 			Console.ForegroundColor = oldColor;
 		}
+		#endregion
 	}
 }

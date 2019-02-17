@@ -83,22 +83,16 @@ namespace GameSaveSystem
 			if (!directoryInfo.Exists)
 				return null;
 
-			var fileInfosEnumerable = (from fileInfo in directoryInfo.EnumerateFiles(fileName + '*')
+			var fileInfosEnumerable = from fileInfo in directoryInfo.EnumerateFiles(fileName + '*')
 				where !fileInfo.Name.EndsWith(".new")
 				orderby GetFileSortValue(fileInfo) descending
-				select fileInfo);
+				select fileInfo;
 
 			var fileInfos = (forceRevert ? fileInfosEnumerable.Skip(1) : fileInfosEnumerable).ToArray();
-			if (fileInfos.Length > 0)
-			{
-				foreach (var fileInfo in fileInfos)
-				{
-					if (loadCallback(Path.Combine(rootPath, fileInfo.Name)))
-						return fileInfo.Name;
-				}
-			}
+			if (fileInfos.Length <= 0)
+				return null;
 
-			return null;
+			return (from fileInfo in fileInfos where loadCallback(Path.Combine(rootPath, fileInfo.Name)) select fileInfo.Name).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -114,9 +108,9 @@ namespace GameSaveSystem
 		public static IEnumerable<KeyValuePair<string, string>> EnumerateSaveFiles(string rootPath, string fileExtension)
 		{
 			var directoryInfo = new DirectoryInfo(rootPath);
-			return (from fileInfo in directoryInfo.EnumerateFiles(SafeSaveHelper.AddFileExtension("*", fileExtension))
+			return from fileInfo in directoryInfo.EnumerateFiles(SafeSaveHelper.AddFileExtension("*", fileExtension))
 				orderby GetFileSortValue(fileInfo) descending
-				select new KeyValuePair<string, string>(fileInfo.Name, fileInfo.Name));
+				select new KeyValuePair<string, string>(fileInfo.Name, fileInfo.Name);
 		}
 
 		/// <summary>

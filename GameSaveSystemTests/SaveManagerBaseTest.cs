@@ -48,8 +48,10 @@ namespace GameSaveSystemTests
 				Thread.Sleep(10);
 			}
 
-			var saveManager = new SaveManager(saveDirectory.Name, false);
-			saveManager.IsAutoSaveEnabled = true;
+			var saveManager = new SaveManager(saveDirectory.Name, false)
+			{
+				IsAutoSaveEnabled = true
+			};
 
 			saveDirectory.Refresh();
 			Assert.IsFalse(saveDirectory.Exists);
@@ -73,8 +75,10 @@ namespace GameSaveSystemTests
 				Thread.Sleep(10);
 			}
 
-			var saveManager = new SaveManager(saveDirectory.Name, true);
-			saveManager.IsAutoSaveEnabled = false;
+			var saveManager = new SaveManager(saveDirectory.Name, true)
+			{
+				IsAutoSaveEnabled = false
+			};
 			saveDirectory.Refresh();
 			Assert.IsFalse(saveDirectory.Exists);
 
@@ -124,8 +128,10 @@ namespace GameSaveSystemTests
 				Thread.Sleep(10);
 			}
 
-			var saveManager = new SaveManager(saveDirectory.Name, false);
-			saveManager.IsAutoSaveEnabled = false;
+			var saveManager = new SaveManager(saveDirectory.Name, false)
+			{
+				IsAutoSaveEnabled = false
+			};
 			saveDirectory.Refresh();
 			Assert.IsFalse(saveDirectory.Exists);
 

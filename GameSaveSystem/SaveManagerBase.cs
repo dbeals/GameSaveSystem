@@ -33,28 +33,19 @@ namespace GameSaveSystem
 	public abstract class SaveManagerBase
 	{
 		#region Variables
-		private float autoSaveTimeElapsedInSeconds;
+		private float _autoSaveTimeElapsedInSeconds;
 		#endregion
 
 		#region Properties
 		public abstract string FileExtension { get; }
-
 		public abstract string FileKey { get; }
-
 		public abstract Version CurrentVersion { get; }
-
 		public string RootPath { get; set; }
-
 		public string AutoSaveFileNamePrefix { get; set; }
-
 		public float AutoSaveIntervalInSeconds { get; set; }
-
 		public int MaximumAutoSaveCount { get; set; }
-
 		public int MaximumSafeSaveCount { get; set; }
-
 		public bool IsAutoSaveEnabled { get; set; }
-
 		public IEnumerable<KeyValuePair<string, string>> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
 		#endregion
 
@@ -103,12 +94,12 @@ namespace GameSaveSystem
 			if (!IsAutoSaveEnabled)
 				return;
 
-			autoSaveTimeElapsedInSeconds += deltaInSeconds;
-			if (autoSaveTimeElapsedInSeconds >= AutoSaveIntervalInSeconds)
-			{
-				autoSaveTimeElapsedInSeconds = 0.0f;
-				AutoSave();
-			}
+			_autoSaveTimeElapsedInSeconds += deltaInSeconds;
+			if (!(_autoSaveTimeElapsedInSeconds >= AutoSaveIntervalInSeconds))
+				return;
+
+			_autoSaveTimeElapsedInSeconds = 0.0f;
+			AutoSave();
 		}
 
 		protected abstract void OnSaveRequested(string fullFilePath);

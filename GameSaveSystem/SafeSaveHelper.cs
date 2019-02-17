@@ -45,11 +45,11 @@ namespace GameSaveSystem
 		public static string GetBaseFileName(string fileName)
 		{
 			var parts = fileName.Split('.');
-			if (parts.Length == 2)
-				return fileName;
-			if (parts.Length == 3)
-				return parts[0] + '.' + parts[2];
-			throw new ArgumentException(string.Format("{0} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", fileName), "incrementalFilename");
+			switch (parts.Length) {
+				case 2: return fileName;
+				case 3: return parts[0] + '.' + parts[2];
+				default: throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
+			}
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace GameSaveSystem
 		{
 			var parts = fileName.Split('.');
 			if (parts.Length < 2 || parts.Length > 3)
-				throw new ArgumentException(string.Format("{0} is not a valid file name. GetIncrementalFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", fileName), "fileName");
+				throw new ArgumentException($"{fileName} is not a valid file name. GetIncrementalFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
 			return AddFileExtension(parts[0] + '.' + index, parts.Length == 2 ? parts[1] : parts[2]);
 		}
 
@@ -77,11 +77,10 @@ namespace GameSaveSystem
 		{
 			var parts = fileName.Split('.');
 			if (parts.Length != 3)
-				throw new ArgumentException(string.Format("{0} is not a valid file name. IncrementFileName() expects file names in the format of FileName.Index.Extension.", fileName), "fileName");
+				throw new ArgumentException($"{fileName} is not a valid file name. IncrementFileName() expects file names in the format of FileName.Index.Extension.", nameof(fileName));
 
-			int index;
-			if (!int.TryParse(parts[1], out index))
-				throw new ArgumentException(string.Format("{0} is not a valid file name. IncrementFileName() expects the Index component to be a number.", fileName), "fileName");
+			if (!int.TryParse(parts[1], out var index))
+				throw new ArgumentException($"{fileName} is not a valid file name. IncrementFileName() expects the Index component to be a number.", nameof(fileName));
 
 			if (index++ > maximumIndex)
 				index = 1;
@@ -99,11 +98,11 @@ namespace GameSaveSystem
 		public static string GetSearchPatternFromFileName(string fileName)
 		{
 			var parts = fileName.Split('.');
-			if (parts.Length == 2)
-				return parts[0] + ".*." + parts[1];
-			if (parts.Length == 3)
-				return parts[0] + ".*." + parts[2];
-			throw new ArgumentNullException(string.Format("{0} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", fileName), "incrementalFilename");
+			switch (parts.Length) {
+				case 2: return parts[0] + ".*." + parts[1];
+				case 3: return parts[0] + ".*." + parts[2];
+				default: throw new ArgumentNullException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
+			}
 		}
 
 		/// <summary>
@@ -160,21 +159,15 @@ namespace GameSaveSystem
 			if (!directoryInfo.Exists)
 				return null;
 
-			var fileInfosEnumerable = (from fileInfo in directoryInfo.EnumerateFiles(GetSearchPatternFromFileName(fileName))
+			var fileInfosEnumerable = from fileInfo in directoryInfo.EnumerateFiles(GetSearchPatternFromFileName(fileName))
 				orderby GetFileSortValue(fileInfo) descending
-				select fileInfo);
+				select fileInfo;
 
 			var fileInfos = (forceRevert ? fileInfosEnumerable.Skip(1) : fileInfosEnumerable).ToArray();
-			if (fileInfos.Length > 0)
-			{
-				foreach (var fileInfo in fileInfos)
-				{
-					if (loadCallback(Path.Combine(rootPath, fileInfo.Name)))
-						return fileInfo.Name;
-				}
-			}
+			if (fileInfos.Length <= 0)
+				return null;
 
-			return null;
+			return (from fileInfo in fileInfos where loadCallback(Path.Combine(rootPath, fileInfo.Name)) select fileInfo.Name).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -190,11 +183,11 @@ namespace GameSaveSystem
 		public static IEnumerable<KeyValuePair<string, string>> EnumerateSaveFiles(string rootPath, string fileExtension)
 		{
 			var directoryInfo = new DirectoryInfo(rootPath);
-			return (from fileInfo in directoryInfo.EnumerateFiles(AddFileExtension("*", fileExtension))
+			return from fileInfo in directoryInfo.EnumerateFiles(AddFileExtension("*", fileExtension))
 				orderby GetFileSortValue(fileInfo) descending
 				group fileInfo by GetBaseFileName(fileInfo.Name)
 				into fileGroup
-				select new KeyValuePair<string, string>(fileGroup.Key, fileGroup.First().Name));
+				select new KeyValuePair<string, string>(fileGroup.Key, fileGroup.First().Name);
 		}
 
 		/// <summary>

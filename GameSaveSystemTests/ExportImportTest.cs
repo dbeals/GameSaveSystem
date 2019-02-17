@@ -60,9 +60,11 @@ namespace GameSaveSystemTests
 			exportFile.Refresh();
 			Assert.IsFalse(exportFile.Exists);
 
-			var saveManager = new SaveManager(saveDirectory.Name, false);
-			saveManager.PlayerName = "Donny";
-			saveManager.PlayerAge = 27;
+			var saveManager = new SaveManager(saveDirectory.Name, false)
+			{
+				PlayerName = "Donny",
+				PlayerAge = 27
+			};
 			saveManager.SaveGame("ExportTest1");
 
 			saveManager.SaveGame("ExportTest2");
@@ -78,9 +80,11 @@ namespace GameSaveSystemTests
 			Assert.AreEqual("ExportTest2.sav", files[1].Key);
 			Assert.AreEqual("ExportTest2.1.sav", files[1].Value);
 
-			var exportContents = new List<string>();
-			exportContents.Add(files[0].Key);
-			exportContents.Add(files[1].Key);
+			var exportContents = new List<string>
+			{
+				files[0].Key,
+				files[1].Key
+			};
 
 			saveManager.Export("SaveGameExport.zip");
 			exportFile.Refresh();

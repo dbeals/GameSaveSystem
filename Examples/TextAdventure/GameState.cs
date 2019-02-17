@@ -67,8 +67,7 @@ namespace TextAdventure
 		{
 			CurrentRoom = Rooms.LoadRoom(roomKey);
 			SetStateValue(roomKey + "-visited", true);
-			if (CurrentRoom.Entered != null)
-				CurrentRoom.Entered(this);
+			CurrentRoom.Entered?.Invoke(this);
 		}
 
 		public void Exit()
@@ -91,10 +90,7 @@ namespace TextAdventure
 		protected override LoadResult LoadGame(StreamReader reader, Version version)
 		{
 			var currentRoomKey = reader.ReadLine();
-			if ((CurrentRoom = Rooms.LoadRoom(currentRoomKey)) == null)
-				return LoadResult.ContentNotFound;
-
-			return LoadResult.Success;
+			return (CurrentRoom = Rooms.LoadRoom(currentRoomKey)) == null ? LoadResult.ContentNotFound : LoadResult.Success;
 		}
 		#endregion
 	}

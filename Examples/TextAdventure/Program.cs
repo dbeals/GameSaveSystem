@@ -54,7 +54,7 @@ namespace TextAdventure
 				var index = 0;
 				var activeActions = state.CurrentRoom.Actions.Where(action => action.StateTest == null || action.StateTest(state)).ToArray();
 				for (; index < activeActions.Length; ++index)
-					Console.WriteLine((index + 1) + ") " + activeActions[index].Description);
+					Console.WriteLine($"{index + 1}) {activeActions[index].Description}");
 
 				Console.WriteLine();
 				if (state.CurrentRoom.CanSave)
@@ -87,8 +87,7 @@ namespace TextAdventure
 					continue;
 				}
 
-				int keyNumber;
-				if (!int.TryParse(key.KeyChar.ToString(), out keyNumber) || keyNumber < 1 || keyNumber > state.CurrentRoom.Actions.Length)
+				if (!int.TryParse(key.KeyChar.ToString(), out var keyNumber) || keyNumber < 1 || keyNumber > state.CurrentRoom.Actions.Length)
 				{
 					state.LastMessage = "You must enter a number that is between 1 and " + (state.CurrentRoom.Actions.Length + 3) + '.';
 					state.LastMessageIsError = true;

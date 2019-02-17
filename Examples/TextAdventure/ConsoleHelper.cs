@@ -42,13 +42,19 @@ namespace TextAdventure
 			for (var index = 0; index < output.Length; ++index)
 			{
 				var character = output[index];
-				if (character == ' ')
-					lastSpaceIndex = index;
-				if (character == '\n')
+				switch (character)
 				{
-					textWidth = 0;
-					lastSpaceIndex = 0;
-					continue;
+					case ' ':
+					{
+						lastSpaceIndex = index;
+						break;
+					}
+					case '\n':
+					{
+						textWidth = 0;
+						lastSpaceIndex = 0;
+						continue;
+					}
 				}
 
 				if (textWidth + 1 > bufferWidth)

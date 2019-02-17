@@ -34,12 +34,12 @@ namespace GameSaveSystemTests
 	public sealed class SaveManager : SaveManagerBase
 	{
 		#region Variables
-		private readonly bool needsToFail;
+		private readonly bool _needsToFail;
 
 		// We'll store our variables right here, but normally they'd go in a GameState class or such.
 		public string PlayerName;
 		public int PlayerAge;
-		private int saveCount;
+		private int _saveCount;
 		#endregion
 
 		#region Properties
@@ -53,13 +53,13 @@ namespace GameSaveSystemTests
 		#region Constructors
 		public SaveManager(string rootPath, bool needsToFail)
 			: base(rootPath, "AutoSave", 900.0f, 10, 3) =>
-			this.needsToFail = needsToFail;
+			_needsToFail = needsToFail;
 		#endregion
 
 		#region Methods
 		protected override void OnSaveRequested(string fullFilePath)
 		{
-			++saveCount;
+			++_saveCount;
 			using (var stream = File.OpenWrite(fullFilePath))
 			{
 				using (var writer = new StreamWriter(stream))
@@ -68,7 +68,7 @@ namespace GameSaveSystemTests
 					writer.WriteLine(CurrentVersion.ToString());
 					writer.WriteLine(PlayerName);
 
-					if (needsToFail == false || saveCount < 3)
+					if (_needsToFail == false || _saveCount < 3)
 					{
 						Console.WriteLine("Creating a valid save ({0}).", fullFilePath);
 						writer.Write(PlayerAge);

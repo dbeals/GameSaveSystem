@@ -36,7 +36,7 @@ namespace ExamplesCore
 	public abstract class GameStateBase : SaveManagerBase, IGameState
 	{
 		#region Variables
-		private readonly Dictionary<string, object> stateValues = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _stateValues = new Dictionary<string, object>();
 		#endregion
 
 		#region Constructors
@@ -51,17 +51,17 @@ namespace ExamplesCore
 			// However, I find this to be a better solution as we'll more than likely need
 			// other types eventually. I simply didn't implement serializing them to and from strings.
 			if (!(value is bool || value is int || value is string))
-				throw new ArgumentException("The game state system only supports boolean, integer, and string state values.", "value");
-			stateValues[key] = value;
+				throw new ArgumentException("The game state system only supports boolean, integer, and string state values.", nameof(value));
+			_stateValues[key] = value;
 		}
 
-		public object GetStateValue(string key) => stateValues[key];
+		public object GetStateValue(string key) => _stateValues[key];
 
-		public bool StateValueExists(string key) => stateValues.ContainsKey(key);
+		public bool StateValueExists(string key) => _stateValues.ContainsKey(key);
 
 		public void ClearStateValues()
 		{
-			stateValues.Clear();
+			_stateValues.Clear();
 		}
 
 		protected abstract void HandleLoadError(string filePath, LoadResult error);
@@ -85,13 +85,12 @@ namespace ExamplesCore
 				using (var reader = new StreamReader(stream))
 				{
 					var result = LoadGame(reader);
-					if (result != LoadResult.Success)
-					{
-						HandleLoadError(fullFilePath, result);
-						return false;
-					}
+					if (result == LoadResult.Success)
+						return true;
 
-					return true;
+					HandleLoadError(fullFilePath, result);
+					return false;
+
 				}
 			}
 		}
@@ -101,24 +100,32 @@ namespace ExamplesCore
 			Debug.Assert(writer.BaseStream.Position == 0, "You need to call base.SaveGame() at the top of your override as it writes the header information.");
 			writer.WriteLine(FileKey);
 			writer.WriteLine(CurrentVersion.ToString());
-			writer.WriteLine(stateValues.Count);
-			foreach (var pair in stateValues)
+			writer.WriteLine(_stateValues.Count);
+			foreach (var pair in _stateValues)
 			{
 				writer.Write(pair.Key);
-				if (pair.Value is bool)
+				switch (pair.Value)
 				{
-					writer.Write(";BOOL;");
-					writer.WriteLine((bool) pair.Value);
-				}
-				else if (pair.Value is int)
-				{
-					writer.Write(";INT;");
-					writer.WriteLine((int) pair.Value);
-				}
-				else if (pair.Value is string)
-				{
-					writer.Write(";STRING;");
-					writer.WriteLine((pair.Value as string) ?? string.Empty);
+					case bool boolValue:
+					{
+						writer.Write(";BOOL;");
+						writer.WriteLine(boolValue);
+						break;
+					}
+
+					case int intValue:
+					{
+						writer.Write(";INT;");
+						writer.WriteLine(intValue);
+						break;
+					}
+
+					case string stringValue:
+					{
+						writer.Write(";STRING;");
+						writer.WriteLine(stringValue);
+						break;
+					}
 				}
 			}
 		}
@@ -133,16 +140,14 @@ namespace ExamplesCore
 				return LoadResult.InvalidKey;
 
 			var versionString = reader.ReadLine();
-			Version version;
-			if (!Version.TryParse(versionString, out version))
+			if (!Version.TryParse(versionString, out var version))
 				return LoadResult.InvalidFormat;
 
 			var stateValueCountString = reader.ReadLine();
-			int stateValueCount;
-			if (!int.TryParse(stateValueCountString, out stateValueCount))
+			if (!int.TryParse(stateValueCountString, out var stateValueCount))
 				return LoadResult.InvalidFormat;
 
-			stateValues.Clear();
+			_stateValues.Clear();
 			for (var index = 0; index < stateValueCount; ++index)
 			{
 				var stateValueLine = reader.ReadLine();
@@ -154,12 +159,26 @@ namespace ExamplesCore
 				var valueType = stateValueLine.Substring(firstSeparator + 1, secondSeparator - firstSeparator);
 				var value = stateValueLine.Substring(secondSeparator + 2);
 
-				if (valueType == "BOOL")
-					stateValues[valueKey] = bool.Parse(value);
-				else if (valueType == "INT")
-					stateValues[valueKey] = int.Parse(value);
-				else if (valueType == "STRING")
-					stateValues[valueKey] = value;
+				switch (valueType)
+				{
+					case "BOOL":
+					{
+						_stateValues[valueKey] = bool.Parse(value);
+						break;
+					}
+
+					case "INT":
+					{
+						_stateValues[valueKey] = int.Parse(value);
+						break;
+					}
+
+					case "STRING":
+					{
+						_stateValues[valueKey] = value;
+						break;
+					}
+				}
 			}
 
 			return LoadGame(reader, version);

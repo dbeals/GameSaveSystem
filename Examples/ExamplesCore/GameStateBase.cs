@@ -90,7 +90,6 @@ namespace ExamplesCore
 
 					HandleLoadError(fullFilePath, result);
 					return false;
-
 				}
 			}
 		}

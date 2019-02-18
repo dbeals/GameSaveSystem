@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 
@@ -45,7 +44,8 @@ namespace GameSaveSystem
 		public static string GetBaseFileName(string fileName)
 		{
 			var parts = fileName.Split('.');
-			switch (parts.Length) {
+			switch (parts.Length)
+			{
 				case 2: return fileName;
 				case 3: return parts[0] + '.' + parts[2];
 				default: throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
@@ -82,7 +82,7 @@ namespace GameSaveSystem
 			if (!int.TryParse(parts[1], out var index))
 				throw new ArgumentException($"{fileName} is not a valid file name. IncrementFileName() expects the Index component to be a number.", nameof(fileName));
 
-			if (index++ > maximumIndex)
+			if (index++ >= maximumIndex)
 				index = 1;
 			return parts[0] + '.' + index + '.' + parts[2];
 		}
@@ -98,10 +98,11 @@ namespace GameSaveSystem
 		public static string GetSearchPatternFromFileName(string fileName)
 		{
 			var parts = fileName.Split('.');
-			switch (parts.Length) {
+			switch (parts.Length)
+			{
 				case 2: return parts[0] + ".*." + parts[1];
 				case 3: return parts[0] + ".*." + parts[2];
-				default: throw new ArgumentNullException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
+				default: throw new ArgumentException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
 			}
 		}
 
@@ -112,7 +113,7 @@ namespace GameSaveSystem
 		/// <param name="fileName"></param>
 		/// <param name="extension"></param>
 		/// <returns>The full file name.</returns>
-		public static string AddFileExtension(string fileName, string extension) => extension.StartsWith(".") ? fileName + extension : fileName + "." + extension;
+		public static string AddFileExtension(string fileName, string extension) => extension.StartsWith(".") ? fileName + extension : $"{fileName}.{extension}";
 
 		/// <summary>
 		///     Processes a save request, passing the output file name to <paramref name="saveCallback" />.
@@ -123,8 +124,6 @@ namespace GameSaveSystem
 		/// <param name="saveCallback">The callback that does the actual saving.</param>
 		public static void SaveGame(string rootPath, string fileName, int maximumSaveCount, Action<string> saveCallback)
 		{
-			Contract.Ensures(saveCallback != null, "You must provide a save callback to use SafeSaveManager.SaveGame().");
-
 			var directoryInfo = new DirectoryInfo(rootPath);
 			directoryInfo.Create();
 
@@ -153,8 +152,6 @@ namespace GameSaveSystem
 		/// <returns>The actual file name (FileName.Index.Extension format) that was loaded.</returns>
 		public static string LoadGame(string rootPath, string fileName, bool forceRevert, Func<string, bool> loadCallback)
 		{
-			Contract.Ensures(loadCallback != null, "You must provide a load callback to use SafeSaveManager.LoadGame().");
-
 			var directoryInfo = new DirectoryInfo(rootPath);
 			if (!directoryInfo.Exists)
 				return null;
@@ -164,9 +161,6 @@ namespace GameSaveSystem
 				select fileInfo;
 
 			var fileInfos = (forceRevert ? fileInfosEnumerable.Skip(1) : fileInfosEnumerable).ToArray();
-			if (fileInfos.Length <= 0)
-				return null;
-
 			return (from fileInfo in fileInfos where loadCallback(Path.Combine(rootPath, fileInfo.Name)) select fileInfo.Name).FirstOrDefault();
 		}
 

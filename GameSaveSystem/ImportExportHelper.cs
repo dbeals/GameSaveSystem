@@ -78,8 +78,6 @@ namespace GameSaveSystem
 					if (!entry.IsFile)
 						continue;
 
-					var entryName = entry.Name;
-
 					var buffer = new byte[4096];
 					using (var inputStream = zipFile.GetInputStream(entry))
 					{
@@ -94,6 +92,8 @@ namespace GameSaveSystem
 						}
 					}
 				}
+
+				zipFile.Close();
 			}
 		}
 		#endregion

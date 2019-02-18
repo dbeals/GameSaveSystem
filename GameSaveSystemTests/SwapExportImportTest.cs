@@ -35,17 +35,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GameSaveSystemTests
 {
 	[TestClass]
-	public class ExportImportTest
+	public class SwapExportImportTest
 	{
 		#region Variables
-		private SaveManager _saveManager;
+		private SwapSaveManager _saveManager;
 		#endregion
 
 		#region Methods
 		[TestInitialize]
 		public void CreateExport()
 		{
-			var saveDirectory = new DirectoryInfo("ExportTest");
+			var saveDirectory = new DirectoryInfo("SwapExportTest");
 			if (saveDirectory.Exists)
 			{
 				saveDirectory.Delete(true);
@@ -55,14 +55,14 @@ namespace GameSaveSystemTests
 			saveDirectory.Refresh();
 			Assert.IsFalse(saveDirectory.Exists);
 
-			var exportFile = new FileInfo("SaveGameExport.zip");
+			var exportFile = new FileInfo("SwapSaveGameExport.zip");
 			if (exportFile.Exists)
 				exportFile.Delete();
 
 			exportFile.Refresh();
 			Assert.IsFalse(exportFile.Exists);
 
-			_saveManager = new SaveManager(saveDirectory.Name, false)
+			_saveManager = new SwapSaveManager(saveDirectory.Name, false)
 			{
 				PlayerName = "Donny",
 				PlayerAge = 27
@@ -75,7 +75,7 @@ namespace GameSaveSystemTests
 
 			_saveManager.SaveGame("ExportTest1");
 
-			_saveManager.Export("SaveGameExport.zip");
+			_saveManager.Export(exportFile.Name);
 		}
 
 		[TestMethod]
@@ -84,9 +84,9 @@ namespace GameSaveSystemTests
 			var files = _saveManager.SaveFiles.ToArray();
 			Assert.IsTrue(files.Length == 2);
 			Assert.AreEqual("ExportTest1.sav", files[0].Key);
-			Assert.AreEqual("ExportTest1.2.sav", files[0].Value);
+			Assert.AreEqual("ExportTest1.sav", files[0].Value);
 			Assert.AreEqual("ExportTest2.sav", files[1].Key);
-			Assert.AreEqual("ExportTest2.1.sav", files[1].Value);
+			Assert.AreEqual("ExportTest2.sav", files[1].Value);
 
 			var exportContents = new List<string>
 			{
@@ -94,7 +94,7 @@ namespace GameSaveSystemTests
 				files[1].Key
 			};
 
-			var exportFile = new FileInfo("SaveGameExport.zip");
+			var exportFile = new FileInfo("SwapSaveGameExport.zip");
 			Assert.IsTrue(exportFile.Exists);
 
 			var zipFile = new ZipFile(exportFile.Name);
@@ -107,7 +107,7 @@ namespace GameSaveSystemTests
 		[TestMethod]
 		public void ImportTest()
 		{
-			var saveDirectory = new DirectoryInfo("ExportTest");
+			var saveDirectory = new DirectoryInfo("SwapExportTest");
 			if (saveDirectory.Exists)
 			{
 				saveDirectory.Delete(true);
@@ -117,7 +117,7 @@ namespace GameSaveSystemTests
 
 			Assert.IsFalse(saveDirectory.Exists);
 
-			var exportFile = new FileInfo("SaveGameExport.zip");
+			var exportFile = new FileInfo("SwapSaveGameExport.zip");
 			Assert.IsTrue(exportFile.Exists);
 			_saveManager.Import(exportFile.Name);
 

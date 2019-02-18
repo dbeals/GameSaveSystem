@@ -125,10 +125,7 @@ You can continue down the hallway or head back the way you came.",
 		#endregion
 
 		#region Methods
-		public static Room LoadRoom(string roomKey)
-		{
-			return !_rooms.Contains(roomKey) ? null : _rooms[roomKey];
-		}
+		public static Room LoadRoom(string roomKey) => !_rooms.Contains(roomKey) ? null : _rooms[roomKey];
 		#endregion
 	}
 }

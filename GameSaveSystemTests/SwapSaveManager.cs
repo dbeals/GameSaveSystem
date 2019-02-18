@@ -69,12 +69,7 @@ namespace GameSaveSystemTests
 					writer.WriteLine(PlayerName);
 
 					if (_needsToFail == false || _saveCount < 3)
-					{
-						Console.WriteLine("Creating a valid save ({0}).", fullFilePath);
 						writer.Write(PlayerAge);
-					}
-					else
-						Console.WriteLine("Creating an invalid save ({0}).", fullFilePath);
 				}
 			}
 		}
@@ -103,8 +98,6 @@ namespace GameSaveSystemTests
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Unfortunately we were unable to load '{0}'. We'll try a previous version if it's available.", fullFilePath);
-				Console.WriteLine(e.Message);
 				return false;
 			}
 		}

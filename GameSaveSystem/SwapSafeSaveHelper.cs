@@ -26,8 +26,6 @@
 // ***********************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 
@@ -44,8 +42,6 @@ namespace GameSaveSystem
 		/// <param name="saveCallback">The callback that does the actual saving.</param>
 		public static void SaveGame(string rootPath, string fileName, Action<string> saveCallback)
 		{
-			Contract.Ensures(saveCallback != null, "You must provide a save callback to use SwapSafeSaveManager.SaveGame().");
-
 			var directoryInfo = new DirectoryInfo(rootPath);
 			directoryInfo.Create();
 
@@ -77,8 +73,6 @@ namespace GameSaveSystem
 		/// <returns>The actual file name (FileName.Index.Extension format) that was loaded.</returns>
 		public static string LoadGame(string rootPath, string fileName, bool forceRevert, Func<string, bool> loadCallback)
 		{
-			Contract.Ensures(loadCallback != null, "You must provide a load callback to use SwapSafeSaveManager.LoadGame().");
-
 			var directoryInfo = new DirectoryInfo(rootPath);
 			if (!directoryInfo.Exists)
 				return null;
@@ -93,39 +87,6 @@ namespace GameSaveSystem
 				return null;
 
 			return (from fileInfo in fileInfos where loadCallback(Path.Combine(rootPath, fileInfo.Name)) select fileInfo.Name).FirstOrDefault();
-		}
-
-		/// <summary>
-		///     Enumerates all of the save files, returning the base name (FileName.Extension) as well as the most recent
-		///     incremental version (FileName.Index.Extension.)
-		/// </summary>
-		/// <param name="rootPath">The root path to the save folder.</param>
-		/// <param name="fileExtension">The save file extension to use.</param>
-		/// <returns>
-		///     A list of pairs containing the base name (FileName.Extension) as the Key and the incremental file
-		///     (FileName.Index.Extension) as the Value.
-		/// </returns>
-		public static IEnumerable<KeyValuePair<string, string>> EnumerateSaveFiles(string rootPath, string fileExtension)
-		{
-			var directoryInfo = new DirectoryInfo(rootPath);
-			return from fileInfo in directoryInfo.EnumerateFiles(SafeSaveHelper.AddFileExtension("*", fileExtension))
-				orderby GetFileSortValue(fileInfo) descending
-				select new KeyValuePair<string, string>(fileInfo.Name, fileInfo.Name);
-		}
-
-		/// <summary>
-		///     Deletes all save files in <paramref name="rootPath" /> based on the base name (FileName.Extension) provided.
-		/// </summary>
-		/// <param name="rootPath">The root path to the save folder.</param>
-		/// <param name="baseFileName">The base file name (FileName.Extension) to delete.</param>
-		public static void CleanseSaveByBaseName(string rootPath, string baseFileName)
-		{
-			var directoryInfo = new DirectoryInfo(rootPath);
-			var files = (from file in directoryInfo.EnumerateFiles(baseFileName + '*')
-				select file).ToArray();
-
-			foreach (var file in files)
-				file.Delete();
 		}
 
 		/// <summary>

@@ -25,7 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -43,7 +42,6 @@ namespace GameSaveSystemTests
 			var saveDirectory = new DirectoryInfo("AutoSaveTests");
 			if (saveDirectory.Exists)
 			{
-				Console.WriteLine("Deleting {0}", saveDirectory.Name);
 				saveDirectory.Delete(true);
 				Thread.Sleep(10);
 			}
@@ -70,7 +68,6 @@ namespace GameSaveSystemTests
 			var saveDirectory = new DirectoryInfo("SwapSaveTests");
 			if (saveDirectory.Exists)
 			{
-				Console.WriteLine("Deleting {0}", saveDirectory.Name);
 				saveDirectory.Delete(true);
 				Thread.Sleep(10);
 			}
@@ -126,7 +123,6 @@ namespace GameSaveSystemTests
 			var saveDirectory = new DirectoryInfo("ForceRevertTests");
 			if (saveDirectory.Exists)
 			{
-				Console.WriteLine("Deleting {0}", saveDirectory.Name);
 				saveDirectory.Delete(true);
 				Thread.Sleep(10);
 			}

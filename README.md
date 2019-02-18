@@ -20,7 +20,7 @@ The incremental implementation works by saving to a new file in the backend. You
 
 The save and swap implementation works by:
 
-+ Saving to a to a .new file (i.e. MyNewSave.sav.new)
++ Saving to a .new file (i.e. MyNewSave.sav.new)
 + Renaming the existing file, if one exists, with a .bak extension (i.e. MyNewSave.sav.bak)
 + Renaming the new file to the proper save (i.e. MyNewSave.sav)
 
@@ -33,7 +33,7 @@ Once you have your derived class, you simply need to make your save/load calls:
 // Inside your main game engine class
 MySaveManager saveManager = new MySaveManager("Saves/");
 
-// When you want to auto-save, if you're not using the automatic auto-save.
+// When you want to auto-save, if you're not using the timed auto-save.
 saveManager.AutoSave();
 
 // When the player has asked to save the game and entered a save game name.

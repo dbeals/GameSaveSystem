@@ -91,6 +91,8 @@ namespace GameSaveSystem
 
 		public void Update(float deltaInSeconds)
 		{
+			OnUpdate(deltaInSeconds);
+
 			if (!IsAutoSaveEnabled)
 				return;
 
@@ -101,6 +103,8 @@ namespace GameSaveSystem
 			_autoSaveTimeElapsedInSeconds = 0.0f;
 			AutoSave();
 		}
+
+		protected virtual void OnUpdate(float deltaInSeconds) { }
 
 		protected abstract void OnSaveRequested(string fullFilePath);
 		protected abstract bool OnLoadRequested(string fullFilePath);

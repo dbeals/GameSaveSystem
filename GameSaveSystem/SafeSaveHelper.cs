@@ -48,7 +48,7 @@ namespace GameSaveSystem
 			{
 				case 2: return fileName;
 				case 3: return parts[0] + '.' + parts[2];
-				default: throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
+				default: throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace GameSaveSystem
 			{
 				case 2: return parts[0] + ".*." + parts[1];
 				case 3: return parts[0] + ".*." + parts[2];
-				default: throw new ArgumentException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", "incrementalFilename");
+				default: throw new ArgumentException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
 			}
 		}
 
@@ -209,7 +209,7 @@ namespace GameSaveSystem
 		/// </summary>
 		/// <param name="fileInfo"></param>
 		/// <returns>The file's sort value.</returns>
-		private static long GetFileSortValue(FileInfo fileInfo)
+		private static long GetFileSortValue(FileSystemInfo fileInfo)
 		{
 			var parts = fileInfo.Name.Split('.');
 			var index = 1;

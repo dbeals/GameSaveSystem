@@ -1,11 +1,11 @@
 ﻿// /***********************************************************************
 // This is free and unencumbered software released into the public domain.
-// 
+//
 // Anyone is free to copy, modify, publish, use, compile, sell, or
 // distribute this software, either in source code form or as a compiled
 // binary, for any purpose, commercial or non-commercial, and by any
 // means.
-// 
+//
 // In jurisdictions that recognize copyright laws, the author or authors
 // of this software dedicate any and all copyright interest in the
 // software to the public domain. We make this dedication for the benefit
@@ -13,7 +13,7 @@
 // successors. We intend this dedication to be an overt act of
 // relinquishment in perpetuity of all present and future rights to this
 // software under copyright law.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -21,7 +21,7 @@
 // OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
@@ -56,7 +56,7 @@ namespace GameSaveSystemTests
 		[ExpectedException(typeof(ArgumentException))]
 		public void GetBaseFileNameTest_Invalid()
 		{
-			var result = SafeSaveHelper.GetBaseFileName("FileName.1.2.Extension");
+			_ = SafeSaveHelper.GetBaseFileName("FileName.1.2.Extension");
 		}
 
 		[TestMethod]
@@ -77,7 +77,7 @@ namespace GameSaveSystemTests
 		[ExpectedException(typeof(ArgumentException))]
 		public void GetIncrementalFileNameTest_Invalid()
 		{
-			var result = SafeSaveHelper.GetIncrementalFileName("FileName.1.2.Extension", 3);
+			_ = SafeSaveHelper.GetIncrementalFileName("FileName.1.2.Extension", 3);
 		}
 
 		[TestMethod]
@@ -98,14 +98,14 @@ namespace GameSaveSystemTests
 		[ExpectedException(typeof(ArgumentException))]
 		public void IncrementFileNameTest_TooManyParts()
 		{
-			var result = SafeSaveHelper.IncrementFileName("FileName.1.2.Extension", 3);
+			_ = SafeSaveHelper.IncrementFileName("FileName.1.2.Extension", 3);
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentException))]
 		public void IncrementFileNameTest_NonInt()
 		{
-			var result = SafeSaveHelper.IncrementFileName("FileName.One.Extension", 3);
+			_ = SafeSaveHelper.IncrementFileName("FileName.One.Extension", 3);
 		}
 
 		[TestMethod]
@@ -126,7 +126,7 @@ namespace GameSaveSystemTests
 		[ExpectedException(typeof(ArgumentException))]
 		public void GetSearchPatternFromFileNameTest_Invalid()
 		{
-			var result = SafeSaveHelper.GetSearchPatternFromFileName("FileName.1.3.Extension");
+			_ = SafeSaveHelper.GetSearchPatternFromFileName("FileName.1.3.Extension");
 		}
 
 		[TestMethod]

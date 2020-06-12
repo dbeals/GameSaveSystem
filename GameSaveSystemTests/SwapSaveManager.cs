@@ -84,13 +84,12 @@ namespace GameSaveSystemTests
 						if (key != FileKey)
 							return false;
 
-						var versionString = reader.ReadLine() ?? string.Empty;
-						var version = Version.TryParse(versionString, out var fileVersion) ? fileVersion : new Version(0, 0);
+						var version = Version.Parse(reader.ReadLine());
 						if (version != CurrentVersion)
 							return false;
 
 						PlayerName = reader.ReadLine();
-						PlayerAge = int.TryParse(reader.ReadLine(), out var playerAge) ? playerAge : 0;
+						PlayerAge = int.Parse(reader.ReadLine());
 						return true;
 					}
 				}

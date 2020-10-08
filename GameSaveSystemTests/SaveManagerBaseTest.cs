@@ -1,11 +1,11 @@
 ﻿// /***********************************************************************
 // This is free and unencumbered software released into the public domain.
-// 
+//
 // Anyone is free to copy, modify, publish, use, compile, sell, or
 // distribute this software, either in source code form or as a compiled
 // binary, for any purpose, commercial or non-commercial, and by any
 // means.
-// 
+//
 // In jurisdictions that recognize copyright laws, the author or authors
 // of this software dedicate any and all copyright interest in the
 // software to the public domain. We make this dedication for the benefit
@@ -13,7 +13,7 @@
 // successors. We intend this dedication to be an overt act of
 // relinquishment in perpetuity of all present and future rights to this
 // software under copyright law.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -21,7 +21,7 @@
 // OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
@@ -71,6 +71,38 @@ namespace GameSaveSystemTests
 			saveDirectory.Refresh();
 			Assert.IsTrue(saveDirectory.Exists);
 			Assert.IsTrue(saveManager.SaveFiles.Count() == 1);
+		}
+
+		[TestMethod]
+		public void LoadAutoSaveTest()
+		{
+			var saveDirectory = new DirectoryInfo("AutoSaveTests");
+			if (saveDirectory.Exists)
+			{
+				saveDirectory.Delete(true);
+				Thread.Sleep(10);
+			}
+
+			var saveManager = new SaveManager(saveDirectory.Name, false)
+			{
+				IsAutoSaveEnabled = true
+			};
+
+			saveDirectory.Refresh();
+			saveManager.PlayerName = "Donny";
+			saveManager.PlayerAge = 27;
+			saveManager.Update(900.0f);
+			saveDirectory.Refresh();
+			Assert.IsTrue(saveDirectory.Exists);
+			Assert.IsTrue(saveManager.SaveFiles.Count() == 1);
+
+			saveManager.PlayerName = "Donald";
+			saveManager.PlayerAge = 30;
+			Assert.AreEqual("Donald", saveManager.PlayerName);
+			Assert.AreEqual(30, saveManager.PlayerAge);
+			saveManager.LoadAutoSave();
+			Assert.AreEqual("Donny", saveManager.PlayerName);
+			Assert.AreEqual(27, saveManager.PlayerAge);
 		}
 
 		[TestMethod]

@@ -121,6 +121,7 @@ namespace GameSaveSystem
 		/// <param name="rootPath">The root path to the save folder.</param>
 		/// <param name="fileName">The file name to use (in FileName.Extension format.)</param>
 		/// <param name="maximumSaveCount">The maximum number of incremental saves allowed.</param>
+		/// <param name="saveType">The type of save.</param>
 		/// <param name="saveCallback">The callback that does the actual saving.</param>
 		public static void SaveGame(string rootPath, string fileName, int maximumSaveCount, SaveType saveType, Action<SaveType, string> saveCallback)
 		{

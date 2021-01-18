@@ -46,6 +46,7 @@ namespace GameSaveSystem
 		public int MaximumAutoSaveCount { get; set; }
 		public int MaximumSafeSaveCount { get; set; }
 		public bool IsAutoSaveEnabled { get; set; }
+		public string QuickSaveName { get; set; } = "Quick Save";
 		public IEnumerable<KeyValuePair<string, string>> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
 		#endregion
 
@@ -72,6 +73,16 @@ namespace GameSaveSystem
 		public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
 		{
 			SafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
+		}
+
+		public void QuickSave()
+		{
+			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, SaveType.QuickSave, OnSaveRequested);
+		}
+
+		public void LoadQuickSave(bool forceRevert = false)
+		{
+			LoadGame(QuickSaveName, forceRevert);
 		}
 
 		public void AutoSave()

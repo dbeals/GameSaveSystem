@@ -66,7 +66,7 @@ namespace GameSaveSystem
 		#region Methods
 		public void SaveGame(string fileNameWithoutExtension)
 		{
-			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), MaximumSafeSaveCount, OnSaveRequested);
+			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), MaximumSafeSaveCount, SaveType.Manual, OnSaveRequested);
 		}
 
 		public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
@@ -76,7 +76,7 @@ namespace GameSaveSystem
 
 		public void AutoSave()
 		{
-			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, OnSaveRequested);
+			SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, SaveType.AutoSave, OnSaveRequested);
 		}
 
 		public void LoadAutoSave(bool forceRevert = false)
@@ -111,7 +111,7 @@ namespace GameSaveSystem
 
 		protected virtual void OnUpdate(float deltaInSeconds) { }
 
-		protected abstract void OnSaveRequested(string fullFilePath);
+		protected abstract void OnSaveRequested(SaveType saveType, string fullFilePath);
 		protected abstract bool OnLoadRequested(string fullFilePath);
 		#endregion
 	}

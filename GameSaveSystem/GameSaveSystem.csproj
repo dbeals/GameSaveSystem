@@ -49,6 +49,7 @@
     <Compile Include="SafeSaveHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveManagerBase.cs" />
+    <Compile Include="SaveType.cs" />
     <Compile Include="SwapSafeSaveHelper.cs" />
     <Compile Include="SwapSaveManagerBase.cs" />
   </ItemGroup>

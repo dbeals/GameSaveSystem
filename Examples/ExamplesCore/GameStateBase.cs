@@ -67,7 +67,7 @@ namespace ExamplesCore
 		protected abstract void HandleLoadError(string filePath, LoadResult error);
 		protected abstract LoadResult LoadGame(StreamReader reader, Version version);
 
-		protected override void OnSaveRequested(string fullFilePath)
+		protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
 		{
 			using (var stream = File.OpenWrite(fullFilePath))
 			{

@@ -122,7 +122,7 @@ namespace GameSaveSystem
 		/// <param name="fileName">The file name to use (in FileName.Extension format.)</param>
 		/// <param name="maximumSaveCount">The maximum number of incremental saves allowed.</param>
 		/// <param name="saveCallback">The callback that does the actual saving.</param>
-		public static void SaveGame(string rootPath, string fileName, int maximumSaveCount, Action<string> saveCallback)
+		public static void SaveGame(string rootPath, string fileName, int maximumSaveCount, SaveType saveType, Action<SaveType, string> saveCallback)
 		{
 			var directoryInfo = new DirectoryInfo(rootPath);
 			directoryInfo.Create();
@@ -132,11 +132,11 @@ namespace GameSaveSystem
 				select fileInfo).ToArray();
 			if (fileInfos.Length == 0)
 			{
-				saveCallback(Path.Combine(rootPath, GetIncrementalFileName(fileName, 1)));
+				saveCallback(saveType, Path.Combine(rootPath, GetIncrementalFileName(fileName, 1)));
 				return;
 			}
 
-			saveCallback(Path.Combine(rootPath, IncrementFileName(fileInfos.Last().Name, maximumSaveCount)));
+			saveCallback(saveType, Path.Combine(rootPath, IncrementFileName(fileInfos.Last().Name, maximumSaveCount)));
 		}
 
 		/// <summary>

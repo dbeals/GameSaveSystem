@@ -28,78 +28,106 @@
 using System;
 using System.Linq;
 
-namespace TextAdventure
+namespace TextAdventure;
+
+internal static class Program
 {
-	internal static class Program
+	#region Methods
+	private static void Main()
 	{
-		#region Methods
-		private static void Main()
+		var state = new GameState();
+		state.StartGame("intro");
+
+		while (state.CurrentRoom != null)
 		{
-			var state = new GameState();
-			state.StartGame("intro");
+			Console.Clear();
 
-			while (state.CurrentRoom != null)
-			{
-				Console.Clear();
-				if (!string.IsNullOrWhiteSpace(state.LastMessage))
-				{
-					ConsoleHelper.WriteLineInColor(state.LastMessageIsError ? ConsoleColor.Red : ConsoleColor.DarkGreen, state.LastMessage);
-					state.LastMessage = string.Empty;
-					state.LastMessageIsError = false;
-				}
+			TryWriteStateMessage(state);
 
-				Console.WriteLine(ConsoleHelper.FitString(state.CurrentRoom.Description ?? "..."));
-				Console.WriteLine();
+			Console.WriteLine(ConsoleHelper.FitString(state.CurrentRoom.Description ?? "..."));
+			Console.WriteLine();
 
-				var index = 0;
-				var activeActions = state.CurrentRoom.Actions.Where(action => action.StateTest == null || action.StateTest(state)).ToArray();
-				for (; index < activeActions.Length; ++index)
-					Console.WriteLine($"{index + 1}) {activeActions[index].Description}");
+			WriteActions(state);
+			WriteMenu(state);
 
-				Console.WriteLine();
-				if (state.CurrentRoom.CanSave)
-					Console.WriteLine("S) Save");
-				if (state.CurrentRoom.CanLoad)
-					Console.WriteLine("L) Load");
-				if (state.CurrentRoom.CanExit)
-					Console.WriteLine("E) Exit");
-
-				var key = Console.ReadKey(true);
-				if (state.CurrentRoom.CanSave && char.ToUpper(key.KeyChar) == 'S')
-				{
-					state.SaveGame("TextAdventure");
-					state.LastMessage = "Game saved successfully.";
-					state.LastMessageIsError = false;
-					continue;
-				}
-
-				if (state.CurrentRoom.CanLoad && char.ToUpper(key.KeyChar) == 'L')
-				{
-					state.LoadGame("TextAdventure");
-					state.LastMessage = "Game loaded successfully.";
-					state.LastMessageIsError = false;
-					continue;
-				}
-
-				if (state.CurrentRoom.CanExit && char.ToUpper(key.KeyChar) == 'E')
-				{
-					state.Exit();
-					continue;
-				}
-
-				if (!int.TryParse(key.KeyChar.ToString(), out var keyNumber) || keyNumber < 1 || keyNumber > state.CurrentRoom.Actions.Length)
-				{
-					state.LastMessage = "You must enter a number that is between 1 and " + (state.CurrentRoom.Actions.Length + 3) + '.';
-					state.LastMessageIsError = true;
-					continue;
-				}
-
-				state.CurrentRoom.Actions[keyNumber - 1].Action(state);
-			}
-
-			Console.WriteLine("Press any key to continue");
-			Console.ReadKey(true);
+			HandleInput(state);
 		}
-		#endregion
+
+		Console.WriteLine("Press any key to continue");
+		Console.ReadKey(true);
 	}
+
+	private static void HandleInput(GameState state)
+	{
+		var key = Console.ReadKey(true);
+		if (state.CurrentRoom.CanSave && char.ToUpper(key.KeyChar) == 'S')
+		{
+			SaveState(state);
+			return;
+		}
+
+		if (state.CurrentRoom.CanLoad && char.ToUpper(key.KeyChar) == 'L')
+		{
+			LoadState(state);
+			return;
+		}
+
+		if (state.CurrentRoom.CanExit && char.ToUpper(key.KeyChar) == 'E')
+		{
+			state.Exit();
+			return;
+		}
+
+		if (!int.TryParse(key.KeyChar.ToString(), out var keyNumber) || keyNumber < 1 || keyNumber > state.CurrentRoom.Actions.Length)
+		{
+			state.LastMessage = "You must enter a number that is between 1 and " + (state.CurrentRoom.Actions.Length + 3) + '.';
+			state.LastMessageIsError = true;
+			return;
+		}
+
+		state.CurrentRoom.Actions[keyNumber - 1].Action(state);
+	}
+
+	private static void WriteActions(GameState state)
+	{
+		var activeActions = state.CurrentRoom.Actions.Where(action => action.StateTest == null || action.StateTest(state)).ToArray();
+		for (var index = 0; index < activeActions.Length; ++index)
+			Console.WriteLine($"{index + 1}) {activeActions[index].Description}");
+	}
+
+	private static void LoadState(GameState state)
+	{
+		state.LoadGame("TextAdventure");
+		state.LastMessage = "Game loaded successfully.";
+		state.LastMessageIsError = false;
+	}
+
+	private static void SaveState(GameState state)
+	{
+		state.SaveGame("TextAdventure");
+		state.LastMessage = "Game saved successfully.";
+		state.LastMessageIsError = false;
+	}
+
+	private static void WriteMenu(GameState state)
+	{
+		Console.WriteLine();
+		if (state.CurrentRoom.CanSave)
+			Console.WriteLine("S) Save");
+		if (state.CurrentRoom.CanLoad)
+			Console.WriteLine("L) Load");
+		if (state.CurrentRoom.CanExit)
+			Console.WriteLine("E) Exit");
+	}
+
+	private static void TryWriteStateMessage(GameState state)
+	{
+		if (string.IsNullOrWhiteSpace(state.LastMessage))
+			return;
+
+		ConsoleHelper.WriteLineInColor(state.LastMessageIsError ? ConsoleColor.Red : ConsoleColor.DarkGreen, state.LastMessage);
+		state.LastMessage = string.Empty;
+		state.LastMessageIsError = false;
+	}
+	#endregion
 }

@@ -41,13 +41,13 @@ public static class Rooms
 	#endregion
 
 	#region Variables
-	private static readonly RoomCollection _rooms = new ();
+	private static readonly RoomCollection _rooms = [];
 	#endregion
 
 	#region Constructors
 	static Rooms()
 	{
-		_rooms.Add(new Room("intro", "Outside Cave Entrance", @"You stand at the entrance of a cave. Everyone says it's haunted, but you obviously don't believe them...wait, is that crying?",
+		_rooms.Add(new Room("intro", "Outside Cave Entrance", "You stand at the entrance of a cave. Everyone says it's haunted, but you obviously don't believe them...wait, is that crying?",
 			new RoomAction("Enter the cave", gameState => gameState.ChangeRoom("inside-cave1")),
 			new RoomAction("Go home", gameState => gameState.ChangeRoom("early-home"))
 		));
@@ -77,14 +77,14 @@ You look up only to see the outline of a small child as you fall into the darkne
 			CanSave = false
 		});
 
-		_rooms.Add(new Room("pit1-lit", "Pit Room", @"There is a large pit blocking the way to the north exit. You use the flashlight to peer into the pit, but all you can see is a large red pit at the bottom.",
+		_rooms.Add(new Room("pit1-lit", "Pit Room", "There is a large pit blocking the way to the north exit. You use the flashlight to peer into the pit, but all you can see is a large red pit at the bottom.",
 			new RoomAction("Go back", gameState => gameState.ChangeRoom("pit1-death2"))
 		)
 		{
 			CanSave = false
 		});
 
-		_rooms.Add(new Room("pit1-death2", "Dark Room", @"You turn to leave and find yourself impeded by black figure about the size of a child. Startled you take a step back and find yourself falling. The last thing you hear is a child's giggle.",
+		_rooms.Add(new Room("pit1-death2", "Dark Room", "You turn to leave and find yourself impeded by black figure about the size of a child. Startled you take a step back and find yourself falling. The last thing you hear is a child's giggle.",
 			new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 		)
 		{
@@ -99,28 +99,28 @@ You can continue down the hallway or head back the way you came.",
 			new RoomAction("Use Flashlight", gameState => gameState.ChangeRoom("hallway1-lit"))
 		));
 
-		_rooms.Add(new Room("hallway1-lit", "Hallway", @"You look around with the flashlight you just found. You see nothing as you peer behind you, but as your gaze returns to the hallway ahead, you see what appears to be a lot of bones. Standing on top of them, you see the dark outline of a child.",
+		_rooms.Add(new Room("hallway1-lit", "Hallway", "You look around with the flashlight you just found. You see nothing as you peer behind you, but as your gaze returns to the hallway ahead, you see what appears to be a lot of bones. Standing on top of them, you see the dark outline of a child.",
 			new RoomAction("Escape", gameState => gameState.ChangeRoom("hallway1-death"))
 		)
 		{
 			RoomActionsOnly = true
 		});
 
-		_rooms.Add(new Room("hallway1-death", "Hallway", @"You turn to run, but it's too late. Whatever that thing was tackles you to the ground. The last thing you hear is the giggle of a small child.",
+		_rooms.Add(new Room("hallway1-death", "Hallway", "You turn to run, but it's too late. Whatever that thing was tackles you to the ground. The last thing you hear is the giggle of a small child.",
 			new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 		)
 		{
 			CanSave = false
 		});
 
-		_rooms.Add(new Room("bone-room", "Dark Room", @"The crying seems to be getting quieter, but you're sure it's coming from this direction. You hear a small crunch as you walk into the room and then crying stops all together...replaced with the giggling of a small child. It's the last sound you hear as you feel a sharp pain in your back and fall to the floor.",
+		_rooms.Add(new Room("bone-room", "Dark Room", "The crying seems to be getting quieter, but you're sure it's coming from this direction. You hear a small crunch as you walk into the room and then crying stops all together...replaced with the giggling of a small child. It's the last sound you hear as you feel a sharp pain in your back and fall to the floor.",
 			new RoomAction("Start over", gameState => gameState.StartGame("inside-cave1"))
 		)
 		{
 			CanSave = false
 		});
 
-		_rooms.Add(new Room("early-home", "Home", @"You decide the best choice is to just leave it alone and head home. You may never know what adventure you missed out on, but maybe that's for the best.",
+		_rooms.Add(new Room("early-home", "Home", "You decide the best choice is to just leave it alone and head home. You may never know what adventure you missed out on, but maybe that's for the best.",
 			new RoomAction("Start over", gameState => gameState.ChangeRoom("intro"))
 		));
 	}

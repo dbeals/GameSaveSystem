@@ -50,7 +50,7 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 		// I know I could simply make 3 overloads here that take the different types
 		// However, I find this to be a better solution as we'll more than likely need
 		// other types eventually. I simply didn't implement serializing them to and from strings.
-		if (!(value is bool || value is int || value is string))
+		if (value is not (bool or int or string))
 			throw new ArgumentException("The game state system only supports boolean, integer, and string state values.", nameof(value));
 		_stateValues[key] = value;
 	}
@@ -68,29 +68,21 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 
 	protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
 	{
-		using (var stream = File.OpenWrite(fullFilePath))
-		{
-			using (var writer = new StreamWriter(stream))
-			{
-				SaveGame(writer);
-			}
-		}
+		using var stream = File.OpenWrite(fullFilePath);
+		using var writer = new StreamWriter(stream);
+		SaveGame(writer);
 	}
 
 	protected override bool OnLoadRequested(string fullFilePath)
 	{
-		using (var stream = File.OpenRead(fullFilePath))
-		{
-			using (var reader = new StreamReader(stream))
-			{
-				var result = LoadGame(reader);
-				if (result == LoadResult.Success)
-					return true;
+		using var stream = File.OpenRead(fullFilePath);
+		using var reader = new StreamReader(stream);
+		var result = LoadGame(reader);
+		if (result == LoadResult.Success)
+			return true;
 
-				HandleLoadError(fullFilePath, result);
-				return false;
-			}
-		}
+		HandleLoadError(fullFilePath, result);
+		return false;
 	}
 
 	protected virtual void SaveGame(StreamWriter writer)
@@ -157,26 +149,13 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 			var valueType = stateValueLine.Substring(firstSeparator + 1, secondSeparator - firstSeparator);
 			var value = stateValueLine.Substring(secondSeparator + 2);
 
-			switch (valueType)
+			_stateValues[valueKey] = valueType switch
 			{
-				case "BOOL":
-				{
-					_stateValues[valueKey] = bool.Parse(value);
-					break;
-				}
-
-				case "INT":
-				{
-					_stateValues[valueKey] = int.Parse(value);
-					break;
-				}
-
-				case "STRING":
-				{
-					_stateValues[valueKey] = value;
-					break;
-				}
-			}
+				"BOOL" => bool.Parse(value),
+				"INT" => int.Parse(value),
+				"STRING" => value,
+				_ => _stateValues[valueKey]
+			};
 		}
 
 		return LoadGame(reader, version);

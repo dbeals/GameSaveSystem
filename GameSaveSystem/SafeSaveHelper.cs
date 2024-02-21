@@ -1,11 +1,11 @@
 ﻿// /***********************************************************************
 // This is free and unencumbered software released into the public domain.
-// 
+//
 // Anyone is free to copy, modify, publish, use, compile, sell, or
 // distribute this software, either in source code form or as a compiled
 // binary, for any purpose, commercial or non-commercial, and by any
 // means.
-// 
+//
 // In jurisdictions that recognize copyright laws, the author or authors
 // of this software dedicate any and all copyright interest in the
 // software to the public domain. We make this dedication for the benefit
@@ -13,7 +13,7 @@
 // successors. We intend this dedication to be an overt act of
 // relinquishment in perpetuity of all present and future rights to this
 // software under copyright law.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -21,7 +21,7 @@
 // OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
@@ -44,12 +44,12 @@ public static class SafeSaveHelper
 	public static string GetBaseFileName(string fileName)
 	{
 		var parts = fileName.Split('.');
-		switch (parts.Length)
+		return parts.Length switch
 		{
-			case 2: return fileName;
-			case 3: return parts[0] + '.' + parts[2];
-			default: throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
-		}
+			2 => fileName,
+			3 => parts[0] + '.' + parts[2],
+			_ => throw new ArgumentException($"{fileName} is not a valid file name. GetBaseFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName))
+		};
 	}
 
 	/// <summary>
@@ -62,7 +62,7 @@ public static class SafeSaveHelper
 	public static string GetIncrementalFileName(string fileName, int index)
 	{
 		var parts = fileName.Split('.');
-		if (parts.Length < 2 || parts.Length > 3)
+		if (parts.Length is < 2 or > 3)
 			throw new ArgumentException($"{fileName} is not a valid file name. GetIncrementalFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
 		return AddFileExtension(parts[0] + '.' + index, parts.Length == 2 ? parts[1] : parts[2]);
 	}
@@ -98,12 +98,12 @@ public static class SafeSaveHelper
 	public static string GetSearchPatternFromFileName(string fileName)
 	{
 		var parts = fileName.Split('.');
-		switch (parts.Length)
+		return parts.Length switch
 		{
-			case 2: return parts[0] + ".*." + parts[1];
-			case 3: return parts[0] + ".*." + parts[2];
-			default: throw new ArgumentException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName));
-		}
+			2 => parts[0] + ".*." + parts[1],
+			3 => parts[0] + ".*." + parts[2],
+			_ => throw new ArgumentException($"{fileName} is not a valid file name. GetSearchPatternFromFileName() expects file names in the format of FileName.Extension or FileName.Index.Extension.", nameof(fileName))
+		};
 	}
 
 	/// <summary>

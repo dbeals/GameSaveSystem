@@ -25,14 +25,13 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-namespace ExamplesCore
+namespace ExamplesCore;
+
+public interface IGameState
 {
-	public interface IGameState
-	{
-		#region Methods
-		void SetStateValue(string key, object value);
-		object GetStateValue(string key);
-		bool StateValueExists(string key);
-		#endregion
-	}
+	#region Methods
+	void SetStateValue(string key, object value);
+	object GetStateValue(string key);
+	bool StateValueExists(string key);
+	#endregion
 }

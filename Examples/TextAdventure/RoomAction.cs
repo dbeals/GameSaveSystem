@@ -27,27 +27,24 @@
 
 using System;
 
-namespace TextAdventure
+namespace TextAdventure;
+
+public sealed class RoomAction
 {
-	public sealed class RoomAction
+	#region Properties
+	public string Description { get; set; }
+	public Action<GameState> Action { get; set; }
+	public Func<GameState, bool> StateTest { get; set; }
+	#endregion
+
+	#region Constructors
+	public RoomAction() { }
+
+	public RoomAction(string description, Action<GameState> action, Func<GameState, bool> stateTest = null)
 	{
-		#region Properties
-		public string Description { get; set; }
-
-		public Action<GameState> Action { get; set; }
-
-		public Func<GameState, bool> StateTest { get; set; }
-		#endregion
-
-		#region Constructors
-		public RoomAction() { }
-
-		public RoomAction(string description, Action<GameState> action, Func<GameState, bool> stateTest = null)
-		{
-			Description = description;
-			Action = action;
-			StateTest = stateTest;
-		}
-		#endregion
+		Description = description;
+		Action = action;
+		StateTest = stateTest;
 	}
+	#endregion
 }

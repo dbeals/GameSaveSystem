@@ -25,16 +25,15 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-namespace ExamplesCore
+namespace ExamplesCore;
+
+public enum LoadResult
 {
-	public enum LoadResult
-	{
-		Success = 0,
-		EmptyFile,
-		InvalidKey,
-		UnsupportedVersion,
-		InvalidFormat,
-		ContentNotFound,
-		UnknownError
-	}
+	Success = 0,
+	EmptyFile,
+	InvalidKey,
+	UnsupportedVersion,
+	InvalidFormat,
+	ContentNotFound,
+	UnknownError
 }

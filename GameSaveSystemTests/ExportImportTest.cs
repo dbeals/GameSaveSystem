@@ -32,98 +32,97 @@ using System.Threading;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameSaveSystemTests
+namespace GameSaveSystemTests;
+
+[TestClass]
+public class ExportImportTest
 {
-	[TestClass]
-	public class ExportImportTest
+	#region Variables
+	private SaveManager _saveManager;
+	#endregion
+
+	#region Methods
+	[TestInitialize]
+	public void CreateExport()
 	{
-		#region Variables
-		private SaveManager _saveManager;
-		#endregion
-
-		#region Methods
-		[TestInitialize]
-		public void CreateExport()
+		var saveDirectory = new DirectoryInfo("ExportTest");
+		if (saveDirectory.Exists)
 		{
-			var saveDirectory = new DirectoryInfo("ExportTest");
-			if (saveDirectory.Exists)
-			{
-				saveDirectory.Delete(true);
-				Thread.Sleep(100);
-			}
-
-			saveDirectory.Refresh();
-			Assert.IsFalse(saveDirectory.Exists);
-
-			var exportFile = new FileInfo("SaveGameExport.zip");
-			if (exportFile.Exists)
-				exportFile.Delete();
-
-			exportFile.Refresh();
-			Assert.IsFalse(exportFile.Exists);
-
-			_saveManager = new SaveManager(saveDirectory.Name, false)
-			{
-				PlayerName = "Donny",
-				PlayerAge = 27
-			};
-			_saveManager.SaveGame("ExportTest1");
-
-			_saveManager.SaveGame("ExportTest2");
-			_saveManager.PlayerName = "Donald";
-			_saveManager.PlayerAge = 28;
-
-			_saveManager.SaveGame("ExportTest1");
-
-			_saveManager.Export("SaveGameExport.zip");
+			saveDirectory.Delete(true);
+			Thread.Sleep(100);
 		}
 
-		[TestMethod]
-		public void ExportTest()
+		saveDirectory.Refresh();
+		Assert.IsFalse(saveDirectory.Exists);
+
+		var exportFile = new FileInfo("SaveGameExport.zip");
+		if (exportFile.Exists)
+			exportFile.Delete();
+
+		exportFile.Refresh();
+		Assert.IsFalse(exportFile.Exists);
+
+		_saveManager = new SaveManager(saveDirectory.Name, false)
 		{
-			var files = _saveManager.SaveFiles.ToArray();
-			Assert.IsTrue(files.Length == 2);
-			Assert.AreEqual("ExportTest1.sav", files[0].Key);
-			Assert.AreEqual("ExportTest1.2.sav", files[0].Value);
-			Assert.AreEqual("ExportTest2.sav", files[1].Key);
-			Assert.AreEqual("ExportTest2.1.sav", files[1].Value);
+			PlayerName = "Donny",
+			PlayerAge = 27
+		};
+		_saveManager.SaveGame("ExportTest1");
 
-			var exportContents = new List<string>
-			{
-				files[0].Key,
-				files[1].Key
-			};
+		_saveManager.SaveGame("ExportTest2");
+		_saveManager.PlayerName = "Donald";
+		_saveManager.PlayerAge = 28;
 
-			var exportFile = new FileInfo("SaveGameExport.zip");
-			Assert.IsTrue(exportFile.Exists);
+		_saveManager.SaveGame("ExportTest1");
 
-			var zipFile = new ZipFile(exportFile.Name);
-			foreach (ZipEntry entry in zipFile)
-				Assert.IsTrue(exportContents.Remove(entry.Name));
-			Assert.IsTrue(exportContents.Count == 0);
-			zipFile.Close();
-		}
-
-		[TestMethod]
-		public void ImportTest()
-		{
-			var saveDirectory = new DirectoryInfo("ExportTest");
-			if (saveDirectory.Exists)
-			{
-				saveDirectory.Delete(true);
-				Thread.Sleep(10);
-				saveDirectory.Refresh();
-			}
-
-			Assert.IsFalse(saveDirectory.Exists);
-
-			var exportFile = new FileInfo("SaveGameExport.zip");
-			Assert.IsTrue(exportFile.Exists);
-			_saveManager.Import(exportFile.Name);
-
-			saveDirectory.Refresh();
-			Assert.AreEqual(2, saveDirectory.EnumerateFiles().Count());
-		}
-		#endregion
+		_saveManager.Export("SaveGameExport.zip");
 	}
+
+	[TestMethod]
+	public void ExportTest()
+	{
+		var files = _saveManager.SaveFiles.ToArray();
+		Assert.IsTrue(files.Length == 2);
+		Assert.AreEqual("ExportTest1.sav", files[0].Key);
+		Assert.AreEqual("ExportTest1.2.sav", files[0].Value);
+		Assert.AreEqual("ExportTest2.sav", files[1].Key);
+		Assert.AreEqual("ExportTest2.1.sav", files[1].Value);
+
+		var exportContents = new List<string>
+		{
+			files[0].Key,
+			files[1].Key
+		};
+
+		var exportFile = new FileInfo("SaveGameExport.zip");
+		Assert.IsTrue(exportFile.Exists);
+
+		var zipFile = new ZipFile(exportFile.Name);
+		foreach (ZipEntry entry in zipFile)
+			Assert.IsTrue(exportContents.Remove(entry.Name));
+		Assert.IsTrue(exportContents.Count == 0);
+		zipFile.Close();
+	}
+
+	[TestMethod]
+	public void ImportTest()
+	{
+		var saveDirectory = new DirectoryInfo("ExportTest");
+		if (saveDirectory.Exists)
+		{
+			saveDirectory.Delete(true);
+			Thread.Sleep(10);
+			saveDirectory.Refresh();
+		}
+
+		Assert.IsFalse(saveDirectory.Exists);
+
+		var exportFile = new FileInfo("SaveGameExport.zip");
+		Assert.IsTrue(exportFile.Exists);
+		_saveManager.Import(exportFile.Name);
+
+		saveDirectory.Refresh();
+		Assert.AreEqual(2, saveDirectory.EnumerateFiles().Count());
+	}
+	#endregion
 }

@@ -28,65 +28,64 @@
 using System;
 using System.Text;
 
-namespace TextAdventure
-{
-	public static class ConsoleHelper
-	{
-		#region Methods
-		public static string FitString(string input)
-		{
-			var output = new StringBuilder(input);
-			var bufferWidth = Console.BufferWidth;
-			var lastSpaceIndex = 0;
-			var textWidth = 0;
-			for (var index = 0; index < output.Length; ++index)
-			{
-				var character = output[index];
-				switch (character)
-				{
-					case ' ':
-					{
-						lastSpaceIndex = index;
-						break;
-					}
-					case '\n':
-					{
-						textWidth = 0;
-						lastSpaceIndex = 0;
-						continue;
-					}
-				}
+namespace TextAdventure;
 
-				if (textWidth + 1 > bufferWidth)
+public static class ConsoleHelper
+{
+	#region Methods
+	public static string FitString(string input)
+	{
+		var output = new StringBuilder(input);
+		var bufferWidth = Console.BufferWidth;
+		var lastSpaceIndex = 0;
+		var textWidth = 0;
+		for (var index = 0; index < output.Length; ++index)
+		{
+			var character = output[index];
+			switch (character)
+			{
+				case ' ':
 				{
-					output.Remove(lastSpaceIndex, 1);
-					output.Insert(lastSpaceIndex, Environment.NewLine);
-					index = lastSpaceIndex + Environment.NewLine.Length;
+					lastSpaceIndex = index;
+					break;
+				}
+				case '\n':
+				{
 					textWidth = 0;
+					lastSpaceIndex = 0;
 					continue;
 				}
-
-				++textWidth;
 			}
 
-			return output.ToString();
+			if (textWidth + 1 > bufferWidth)
+			{
+				output.Remove(lastSpaceIndex, 1);
+				output.Insert(lastSpaceIndex, Environment.NewLine);
+				index = lastSpaceIndex + Environment.NewLine.Length;
+				textWidth = 0;
+				continue;
+			}
+
+			++textWidth;
 		}
 
-		public static void WriteInColor(ConsoleColor color, string input)
-		{
-			var oldColor = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-			Console.Write(input);
-			Console.ForegroundColor = oldColor;
-		}
-
-		public static void WriteLineInColor(ConsoleColor color, string input)
-		{
-			var oldColor = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-			Console.WriteLine(input);
-			Console.ForegroundColor = oldColor;
-		}
-		#endregion
+		return output.ToString();
 	}
+
+	public static void WriteInColor(ConsoleColor color, string input)
+	{
+		var oldColor = Console.ForegroundColor;
+		Console.ForegroundColor = color;
+		Console.Write(input);
+		Console.ForegroundColor = oldColor;
+	}
+
+	public static void WriteLineInColor(ConsoleColor color, string input)
+	{
+		var oldColor = Console.ForegroundColor;
+		Console.ForegroundColor = color;
+		Console.WriteLine(input);
+		Console.ForegroundColor = oldColor;
+	}
+	#endregion
 }

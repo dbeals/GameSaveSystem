@@ -27,14 +27,13 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameSaveSystemTests
+namespace GameSaveSystemTests;
+
+[TestClass]
+public class SwapSafeSaveHelperTests
 {
-	[TestClass]
-	public class SwapSafeSaveHelperTests
-	{
-		#region Methods
-		[TestMethod]
-		public void EnumerateSaveFilesTest() { }
-		#endregion
-	}
+	#region Methods
+	[TestMethod]
+	public void EnumerateSaveFilesTest() { }
+	#endregion
 }

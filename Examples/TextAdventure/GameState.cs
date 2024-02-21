@@ -30,68 +30,62 @@ using System.IO;
 using ExamplesCore;
 using TextAdventure.Data;
 
-namespace TextAdventure
+namespace TextAdventure;
+
+public sealed class GameState : GameStateBase
 {
-	public sealed class GameState : GameStateBase
+	#region Properties
+	public override string FileExtension => ".gss-ta";
+	public override string FileKey => "GSS-EX-TEXTADV";
+	public override Version CurrentVersion => new (1, 0);
+	public Room CurrentRoom { get; set; }
+	public string LastMessage { get; set; }
+	public bool LastMessageIsError { get; set; }
+	#endregion
+
+	#region Constructors
+	public GameState()
+		: base("Saves/", "AutoSave-", 0.0f, 3, 3)
 	{
-		#region Properties
-		public override string FileExtension => ".gss-ta";
-
-		public override string FileKey => "GSS-EX-TEXTADV";
-
-		public override Version CurrentVersion => new Version(1, 0);
-
-		public Room CurrentRoom { get; set; }
-
-		public string LastMessage { get; set; }
-
-		public bool LastMessageIsError { get; set; }
-		#endregion
-
-		#region Constructors
-		public GameState()
-			: base("Saves/", "AutoSave-", 0.0f, 3, 3)
-		{
-			// I set auto save interval to 0 as we won't be calling update anyway in a console game.
-		}
-		#endregion
-
-		#region Methods
-		public void StartGame(string roomKey)
-		{
-			ClearStateValues();
-			ChangeRoom(roomKey);
-		}
-
-		public void ChangeRoom(string roomKey)
-		{
-			CurrentRoom = Rooms.LoadRoom(roomKey);
-			SetStateValue(roomKey + "-visited", true);
-			CurrentRoom.Entered?.Invoke(this);
-		}
-
-		public void Exit()
-		{
-			CurrentRoom = null;
-		}
-
-		protected override void HandleLoadError(string filePath, LoadResult error)
-		{
-			LastMessageIsError = true;
-			LastMessage = "Failed to load save " + filePath + " : " + error;
-		}
-
-		protected override void SaveGame(StreamWriter writer)
-		{
-			base.SaveGame(writer);
-			writer.WriteLine(CurrentRoom.Key);
-		}
-
-		protected override LoadResult LoadGame(StreamReader reader, Version version)
-		{
-			var currentRoomKey = reader.ReadLine();
-			return (CurrentRoom = Rooms.LoadRoom(currentRoomKey)) == null ? LoadResult.ContentNotFound : LoadResult.Success;
-		}
-		#endregion
+		// I set auto save interval to 0 as we won't be calling update anyway in a console game.
 	}
+	#endregion
+
+	#region Methods
+	public void StartGame(string roomKey)
+	{
+		ClearStateValues();
+		ChangeRoom(roomKey);
+	}
+
+	public void ChangeRoom(string roomKey)
+	{
+		CurrentRoom = Rooms.LoadRoom(roomKey);
+		SetStateValue(roomKey + "-visited", true);
+		CurrentRoom.Entered?.Invoke(this);
+	}
+
+	public void Exit()
+	{
+		CurrentRoom = null;
+	}
+
+	protected override void HandleLoadError(string filePath, LoadResult error)
+	{
+		LastMessageIsError = true;
+		LastMessage = "Failed to load save " + filePath + " : " + error;
+	}
+
+	protected override void SaveGame(StreamWriter writer)
+	{
+		base.SaveGame(writer);
+		writer.WriteLine(CurrentRoom.Key);
+	}
+
+	protected override LoadResult LoadGame(StreamReader reader, Version version)
+	{
+		var currentRoomKey = reader.ReadLine();
+		return (CurrentRoom = Rooms.LoadRoom(currentRoomKey)) == null ? LoadResult.ContentNotFound : LoadResult.Success;
+	}
+	#endregion
 }

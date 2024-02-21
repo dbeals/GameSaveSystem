@@ -28,75 +28,74 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameSaveSystem
+namespace GameSaveSystem;
+
+public abstract class SwapSaveManagerBase
 {
-	public abstract class SwapSaveManagerBase
+	#region Variables
+	private float _autoSaveTimeElapsedInSeconds;
+	#endregion
+
+	#region Properties
+	public abstract string FileExtension { get; }
+	public abstract string FileKey { get; }
+	public abstract Version CurrentVersion { get; }
+	public IEnumerable<KeyValuePair<string, string>> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
+	public string RootPath { get; set; }
+	public string AutoSaveFileNamePrefix { get; set; }
+	public float AutoSaveIntervalInSeconds { get; set; }
+	public bool IsAutoSaveEnabled { get; set; }
+	#endregion
+
+	#region Constructors
+	protected SwapSaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds)
 	{
-		#region Variables
-		private float _autoSaveTimeElapsedInSeconds;
-		#endregion
-
-		#region Properties
-		public abstract string FileExtension { get; }
-		public abstract string FileKey { get; }
-		public abstract Version CurrentVersion { get; }
-		public string RootPath { get; set; }
-		public string AutoSaveFileNamePrefix { get; set; }
-		public float AutoSaveIntervalInSeconds { get; set; }
-		public bool IsAutoSaveEnabled { get; set; }
-		public IEnumerable<KeyValuePair<string, string>> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
-		#endregion
-
-		#region Constructors
-		protected SwapSaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds)
-		{
-			RootPath = rootPath;
-			AutoSaveFileNamePrefix = autoSaveFileNamePrefix;
-			AutoSaveIntervalInSeconds = autoSaveIntervalInSeconds;
-		}
-		#endregion
-
-		#region Methods
-		public void SaveGame(string fileNameWithoutExtension)
-		{
-			SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveRequested);
-		}
-
-		public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
-		{
-			SwapSafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
-		}
-
-		public void AutoSave()
-		{
-			SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), OnSaveRequested);
-		}
-
-		public void Export(string exportFileName, int compressionLevel = 3, string password = null)
-		{
-			ImportExportHelper.Export(RootPath, SaveFiles, exportFileName, compressionLevel, password);
-		}
-
-		public void Import(string importFileName)
-		{
-			ImportExportHelper.Import(RootPath, importFileName, entryName => SafeSaveHelper.GetIncrementalFileName(entryName, 1));
-		}
-
-		public void Update(float deltaInSeconds)
-		{
-			if (!IsAutoSaveEnabled)
-				return;
-
-			_autoSaveTimeElapsedInSeconds += deltaInSeconds;
-			if (!(_autoSaveTimeElapsedInSeconds >= AutoSaveIntervalInSeconds))
-				return;
-
-			_autoSaveTimeElapsedInSeconds = 0.0f;
-			AutoSave();
-		}
-
-		protected abstract void OnSaveRequested(string fullFilePath);
-		protected abstract bool OnLoadRequested(string fullFilePath);
-		#endregion
+		RootPath = rootPath;
+		AutoSaveFileNamePrefix = autoSaveFileNamePrefix;
+		AutoSaveIntervalInSeconds = autoSaveIntervalInSeconds;
 	}
+	#endregion
+
+	#region Methods
+	public void SaveGame(string fileNameWithoutExtension)
+	{
+		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveRequested);
+	}
+
+	public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
+	{
+		SwapSafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
+	}
+
+	public void AutoSave()
+	{
+		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), OnSaveRequested);
+	}
+
+	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
+	{
+		ImportExportHelper.Export(RootPath, SaveFiles, exportFileName, compressionLevel, password);
+	}
+
+	public void Import(string importFileName)
+	{
+		ImportExportHelper.Import(RootPath, importFileName, entryName => SafeSaveHelper.GetIncrementalFileName(entryName, 1));
+	}
+
+	public void Update(float deltaInSeconds)
+	{
+		if (!IsAutoSaveEnabled)
+			return;
+
+		_autoSaveTimeElapsedInSeconds += deltaInSeconds;
+		if (!(_autoSaveTimeElapsedInSeconds >= AutoSaveIntervalInSeconds))
+			return;
+
+		_autoSaveTimeElapsedInSeconds = 0.0f;
+		AutoSave();
+	}
+
+	protected abstract void OnSaveRequested(string fullFilePath);
+	protected abstract bool OnLoadRequested(string fullFilePath);
+	#endregion
 }

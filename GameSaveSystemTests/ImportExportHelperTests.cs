@@ -27,14 +27,13 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GameSaveSystemTests
+namespace GameSaveSystemTests;
+
+[TestClass]
+public class ImportExportHelperTests
 {
-	[TestClass]
-	public class ImportExportHelperTests
-	{
-		#region Methods
-		[TestMethod]
-		public void ImportTest() { }
-		#endregion
-	}
+	#region Methods
+	[TestMethod]
+	public void ImportTest() { }
+	#endregion
 }

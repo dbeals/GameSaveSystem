@@ -38,7 +38,7 @@ namespace GameSaveSystemTests;
 public class ExportImportTest
 {
 	#region Variables
-	private SaveManager _saveManager;
+	private TestSaveManager _testSaveManager;
 	#endregion
 
 	#region Methods
@@ -62,26 +62,26 @@ public class ExportImportTest
 		exportFile.Refresh();
 		Assert.IsFalse(exportFile.Exists);
 
-		_saveManager = new SaveManager(saveDirectory.Name, false)
+		_testSaveManager = new TestSaveManager(saveDirectory.Name, false)
 		{
 			PlayerName = "Donny",
 			PlayerAge = 27
 		};
-		_saveManager.SaveGame("ExportTest1");
+		_testSaveManager.SaveGame("ExportTest1");
 
-		_saveManager.SaveGame("ExportTest2");
-		_saveManager.PlayerName = "Donald";
-		_saveManager.PlayerAge = 28;
+		_testSaveManager.SaveGame("ExportTest2");
+		_testSaveManager.PlayerName = "Donald";
+		_testSaveManager.PlayerAge = 28;
 
-		_saveManager.SaveGame("ExportTest1");
+		_testSaveManager.SaveGame("ExportTest1");
 
-		_saveManager.Export("SaveGameExport.zip");
+		_testSaveManager.Export("SaveGameExport.zip");
 	}
 
 	[TestMethod]
 	public void ExportTest()
 	{
-		var files = _saveManager.SaveFiles.ToArray();
+		var files = _testSaveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 2);
 		Assert.AreEqual("ExportTest1.sav", files[0].Key);
 		Assert.AreEqual("ExportTest1.2.sav", files[0].Value);
@@ -119,7 +119,7 @@ public class ExportImportTest
 
 		var exportFile = new FileInfo("SaveGameExport.zip");
 		Assert.IsTrue(exportFile.Exists);
-		_saveManager.Import(exportFile.Name);
+		_testSaveManager.Import(exportFile.Name);
 
 		saveDirectory.Refresh();
 		Assert.AreEqual(2, saveDirectory.EnumerateFiles().Count());

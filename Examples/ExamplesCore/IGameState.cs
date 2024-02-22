@@ -25,6 +25,8 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
+using System.IO;
+
 namespace ExamplesCore;
 
 public interface IGameState
@@ -33,5 +35,8 @@ public interface IGameState
 	void SetStateValue(string key, object value);
 	object GetStateValue(string key);
 	bool StateValueExists(string key);
+	void ClearStateValues();
+	void WriteToStream(StreamWriter writer);
+	LoadResult ReadFromStream(StreamReader reader);
 	#endregion
 }

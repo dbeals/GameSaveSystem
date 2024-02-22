@@ -39,7 +39,7 @@ public class SaveManagerBaseTest
 	[TestMethod]
 	public void EmptyConstructorTest()
 	{
-		var saveManager = new SaveManager();
+		var saveManager = new TestSaveManager();
 		Assert.AreEqual("Saves/", saveManager.RootPath);
 		Assert.AreEqual("Auto Save", saveManager.AutoSaveFileNamePrefix);
 		Assert.AreEqual(900f, saveManager.AutoSaveIntervalInSeconds);
@@ -57,7 +57,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new SaveManager(saveDirectory.Name, false)
+		var saveManager = new TestSaveManager(saveDirectory.Name, false)
 		{
 			IsAutoSaveEnabled = true
 		};
@@ -83,7 +83,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new SaveManager(saveDirectory.Name, false)
+		var saveManager = new TestSaveManager(saveDirectory.Name, false)
 		{
 			IsAutoSaveEnabled = true
 		};
@@ -115,7 +115,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new SaveManager(saveDirectory.Name, true)
+		var saveManager = new TestSaveManager(saveDirectory.Name, true)
 		{
 			IsAutoSaveEnabled = false
 		};
@@ -167,7 +167,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new SaveManager(saveDirectory.Name, false)
+		var saveManager = new TestSaveManager(saveDirectory.Name, false)
 		{
 			IsAutoSaveEnabled = false
 		};

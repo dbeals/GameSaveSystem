@@ -43,6 +43,7 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ExampleSaveManagerBase.cs"/>
         <Compile Include="GameStateBase.cs"/>
         <Compile Include="IGameState.cs"/>
         <Compile Include="LoadResult.cs"/>

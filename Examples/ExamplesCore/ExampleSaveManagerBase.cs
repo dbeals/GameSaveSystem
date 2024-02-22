@@ -26,71 +26,75 @@
 // ***********************************************************************/
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using GameSaveSystem;
 
-namespace GameSaveSystemTests;
+namespace ExamplesCore;
 
-public sealed class SaveManager : SaveManagerBase
+public abstract class ExampleSaveManagerBase<TGameState> : SaveManagerBase
+	where TGameState : class, IGameState, new()
 {
-	#region Variables
-	// We'll store our variables right here, but normally they'd go in a GameState class or such.
-	public string PlayerName;
-	public int PlayerAge;
-	private readonly bool _needsToFail;
-	private int _saveCount;
-	#endregion
-
 	#region Properties
-	public override string FileExtension => ".sav";
-	public override string FileKey => "SAVTEST";
-	public override Version CurrentVersion => new (1, 0);
+	public TGameState CurrentGameState { get; set; }
 	#endregion
 
 	#region Constructors
-	public SaveManager() { }
-
-	public SaveManager(string rootPath, bool needsToFail)
-		: base(rootPath, "AutoSave", 900.0f, 10, 3) =>
-		_needsToFail = needsToFail;
+	protected ExampleSaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds, int maximumAutoSaveCount, int maximumSafeSaveCount)
+		: base(rootPath, autoSaveFileNamePrefix, autoSaveIntervalInSeconds, maximumAutoSaveCount, maximumSafeSaveCount) { }
 	#endregion
 
 	#region Methods
+	protected abstract void HandleLoadError(string filePath, LoadResult error);
+
 	protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
 	{
-		++_saveCount;
 		using var stream = File.OpenWrite(fullFilePath);
 		using var writer = new StreamWriter(stream);
-		writer.WriteLine(FileKey);
-		writer.WriteLine(CurrentVersion.ToString());
-		writer.WriteLine(PlayerName);
-
-		if (_needsToFail == false || _saveCount < 3)
-			writer.Write(PlayerAge);
+		SaveGame(writer);
 	}
 
 	protected override bool OnLoadRequested(string fullFilePath)
 	{
-		try
-		{
-			using var stream = File.OpenRead(fullFilePath);
-			using var reader = new StreamReader(stream);
-			var key = reader.ReadLine();
-			if (key != FileKey)
-				return false;
-
-			var version = Version.Parse(reader.ReadLine());
-			if (version != CurrentVersion)
-				return false;
-
-			PlayerName = reader.ReadLine();
-			PlayerAge = int.Parse(reader.ReadLine());
+		using var stream = File.OpenRead(fullFilePath);
+		using var reader = new StreamReader(stream);
+		var result = LoadGame(reader);
+		if (result == LoadResult.Success)
 			return true;
-		}
-		catch
-		{
-			return false;
-		}
+
+		HandleLoadError(fullFilePath, result);
+		return false;
+	}
+
+	protected virtual void SaveGame(StreamWriter writer)
+	{
+		Debug.Assert(writer.BaseStream.Position == 0, "You need to call base.SaveGame() at the top of your override as it writes the header information.");
+		writer.WriteLine(FileKey);
+		writer.WriteLine(CurrentVersion.ToString());
+		CurrentGameState.WriteToStream(writer);
+	}
+
+	protected virtual LoadResult LoadGame(StreamReader reader)
+	{
+		var newGameState = new TGameState();
+
+		if (reader.BaseStream.Length == 0)
+			return LoadResult.EmptyFile;
+
+		var fileKey = reader.ReadLine();
+		if (fileKey != FileKey)
+			return LoadResult.InvalidKey;
+
+		var versionString = reader.ReadLine() ?? string.Empty;
+		if (!Version.TryParse(versionString, out var version))
+			return LoadResult.InvalidFormat;
+
+		var result = newGameState.ReadFromStream(reader);
+		if (result != LoadResult.Success)
+			return result;
+
+		CurrentGameState = newGameState;
+		return result;
 	}
 	#endregion
 }

@@ -33,14 +33,14 @@ public sealed class RoomAction
 {
 	#region Properties
 	public string Description { get; set; }
-	public Action<GameState> Action { get; set; }
-	public Func<GameState, bool> StateTest { get; set; }
+	public Action<TextAdventureSaveManager> Action { get; set; }
+	public Func<TextAdventureSaveManager, bool> StateTest { get; set; }
 	#endregion
 
 	#region Constructors
 	public RoomAction() { }
 
-	public RoomAction(string description, Action<GameState> action, Func<GameState, bool> stateTest = null)
+	public RoomAction(string description, Action<TextAdventureSaveManager> action, Func<TextAdventureSaveManager, bool> stateTest = null)
 	{
 		Description = description;
 		Action = action;

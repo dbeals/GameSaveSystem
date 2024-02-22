@@ -63,7 +63,7 @@
     <ItemGroup>
         <Compile Include="SwapExportImportTest.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="SaveManager.cs"/>
+        <Compile Include="TestSaveManager.cs"/>
         <Compile Include="SaveManagerBaseTest.cs"/>
         <Compile Include="ExportImportTest.cs"/>
         <Compile Include="SwapSaveManager.cs"/>

@@ -27,21 +27,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using GameSaveSystem;
 
 namespace ExamplesCore;
 
-public abstract class GameStateBase : SaveManagerBase, IGameState
+public abstract class GameStateBase : IGameState
 {
 	#region Variables
 	private readonly Dictionary<string, object> _stateValues = new ();
-	#endregion
-
-	#region Constructors
-	protected GameStateBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds, int maximumAutoSaveCount, int maximumSafeSaveCount)
-		: base(rootPath, autoSaveFileNamePrefix, autoSaveIntervalInSeconds, maximumAutoSaveCount, maximumSafeSaveCount) { }
 	#endregion
 
 	#region Methods
@@ -63,33 +56,8 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 		_stateValues.Clear();
 	}
 
-	protected abstract void HandleLoadError(string filePath, LoadResult error);
-	protected abstract LoadResult LoadGame(StreamReader reader, Version version);
-
-	protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
+	public virtual void WriteToStream(StreamWriter writer)
 	{
-		using var stream = File.OpenWrite(fullFilePath);
-		using var writer = new StreamWriter(stream);
-		SaveGame(writer);
-	}
-
-	protected override bool OnLoadRequested(string fullFilePath)
-	{
-		using var stream = File.OpenRead(fullFilePath);
-		using var reader = new StreamReader(stream);
-		var result = LoadGame(reader);
-		if (result == LoadResult.Success)
-			return true;
-
-		HandleLoadError(fullFilePath, result);
-		return false;
-	}
-
-	protected virtual void SaveGame(StreamWriter writer)
-	{
-		Debug.Assert(writer.BaseStream.Position == 0, "You need to call base.SaveGame() at the top of your override as it writes the header information.");
-		writer.WriteLine(FileKey);
-		writer.WriteLine(CurrentVersion.ToString());
 		writer.WriteLine(_stateValues.Count);
 		foreach (var pair in _stateValues)
 		{
@@ -120,19 +88,8 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 		}
 	}
 
-	private LoadResult LoadGame(StreamReader reader)
+	public virtual LoadResult ReadFromStream(StreamReader reader)
 	{
-		if (reader.BaseStream.Length == 0)
-			return LoadResult.EmptyFile;
-
-		var fileKey = reader.ReadLine();
-		if (fileKey != FileKey)
-			return LoadResult.InvalidKey;
-
-		var versionString = reader.ReadLine() ?? string.Empty;
-		if (!Version.TryParse(versionString, out var version))
-			return LoadResult.InvalidFormat;
-
 		var stateValueCountString = reader.ReadLine();
 		if (!int.TryParse(stateValueCountString, out var stateValueCount))
 			return LoadResult.InvalidFormat;
@@ -158,7 +115,7 @@ public abstract class GameStateBase : SaveManagerBase, IGameState
 			};
 		}
 
-		return LoadGame(reader, version);
+		return LoadResult.Success;
 	}
 	#endregion
 }

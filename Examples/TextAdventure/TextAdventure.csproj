@@ -48,11 +48,12 @@
     <ItemGroup>
         <Compile Include="ConsoleHelper.cs"/>
         <Compile Include="Data\Rooms.cs"/>
-        <Compile Include="GameState.cs"/>
+        <Compile Include="TextAdventureGameState.cs"/>
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Room.cs"/>
         <Compile Include="RoomAction.cs"/>
+        <Compile Include="TextAdventureSaveManager.cs"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\GameSaveSystem\GameSaveSystem.csproj">

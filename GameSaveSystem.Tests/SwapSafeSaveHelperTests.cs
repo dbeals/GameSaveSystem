@@ -25,15 +25,13 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace GameSaveSystemTests;
+namespace GameSaveSystem.Tests;
 
-[TestClass]
-public class ImportExportHelperTests
+[TestFixture]
+public class SwapSafeSaveHelperTests
 {
-	#region Methods
-	[TestMethod]
-	public void ImportTest() { }
-	#endregion
+	[Test]
+	public void EnumerateSaveFilesTest() { }
 }

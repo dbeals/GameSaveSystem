@@ -30,19 +30,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace GameSaveSystemTests;
+namespace GameSaveSystem.Tests;
 
-[TestClass]
+[TestFixture]
 public class ExportImportTest
 {
-	#region Variables
-	private TestSaveManager _testSaveManager;
-	#endregion
-
-	#region Methods
-	[TestInitialize]
+	[SetUp]
 	public void CreateExport()
 	{
 		var saveDirectory = new DirectoryInfo("ExportTest");
@@ -78,7 +73,9 @@ public class ExportImportTest
 		_testSaveManager.Export("SaveGameExport.zip");
 	}
 
-	[TestMethod]
+	private TestSaveManager _testSaveManager;
+
+	[Test]
 	public void ExportTest()
 	{
 		var files = _testSaveManager.SaveFiles.ToArray();
@@ -104,7 +101,7 @@ public class ExportImportTest
 		zipFile.Close();
 	}
 
-	[TestMethod]
+	[Test]
 	public void ImportTest()
 	{
 		var saveDirectory = new DirectoryInfo("ExportTest");
@@ -124,5 +121,4 @@ public class ExportImportTest
 		saveDirectory.Refresh();
 		Assert.AreEqual(2, saveDirectory.EnumerateFiles().Count());
 	}
-	#endregion
 }

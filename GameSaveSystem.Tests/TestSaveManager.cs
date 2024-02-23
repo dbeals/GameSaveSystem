@@ -27,9 +27,8 @@
 
 using System;
 using System.IO;
-using GameSaveSystem;
 
-namespace GameSaveSystemTests;
+namespace GameSaveSystem.Tests;
 
 public sealed class TestSaveManager : SaveManagerBase
 {

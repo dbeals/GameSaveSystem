@@ -25,15 +25,38 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace GameSaveSystemTests;
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("GameSaveSystem.Tests")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("GameSaveSystem.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
-[TestClass]
-public class SwapSafeSaveHelperTests
-{
-	#region Methods
-	[TestMethod]
-	public void EnumerateSaveFilesTest() { }
-	#endregion
-}
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("E7B2643E-9CCD-4487-89D1-7BA6BC27DBCC")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -28,27 +28,15 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace GameSaveSystemTests;
+namespace GameSaveSystem.Tests;
 
-[TestClass]
-public class SaveManagerBaseTest
+[TestFixture]
+public class SwapSaveManagerBaseTest
 {
-	#region Methods
-	[TestMethod]
-	public void EmptyConstructorTest()
-	{
-		var saveManager = new TestSaveManager();
-		Assert.AreEqual("Saves/", saveManager.RootPath);
-		Assert.AreEqual("Auto Save", saveManager.AutoSaveFileNamePrefix);
-		Assert.AreEqual(900f, saveManager.AutoSaveIntervalInSeconds);
-		Assert.AreEqual(3, saveManager.MaximumAutoSaveCount);
-		Assert.AreEqual(3, saveManager.MaximumSafeSaveCount);
-	}
-
-	[TestMethod]
-	public void AutoSaveTest()
+	[Test]
+	public void SwapAutoSaveTest()
 	{
 		var saveDirectory = new DirectoryInfo("AutoSaveTests");
 		if (saveDirectory.Exists)
@@ -57,7 +45,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new TestSaveManager(saveDirectory.Name, false)
+		var saveManager = new SwapSaveManager(saveDirectory.Name, false)
 		{
 			IsAutoSaveEnabled = true
 		};
@@ -73,49 +61,17 @@ public class SaveManagerBaseTest
 		Assert.IsTrue(saveManager.SaveFiles.Count() == 1);
 	}
 
-	[TestMethod]
-	public void LoadAutoSaveTest()
+	[Test]
+	public void SwapSafeSaveTest()
 	{
-		var saveDirectory = new DirectoryInfo("AutoSaveTests");
+		var saveDirectory = new DirectoryInfo("SwapSaveTests");
 		if (saveDirectory.Exists)
 		{
 			saveDirectory.Delete(true);
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new TestSaveManager(saveDirectory.Name, false)
-		{
-			IsAutoSaveEnabled = true
-		};
-
-		saveDirectory.Refresh();
-		saveManager.PlayerName = "Donny";
-		saveManager.PlayerAge = 27;
-		saveManager.Update(900.0f);
-		saveDirectory.Refresh();
-		Assert.IsTrue(saveDirectory.Exists);
-		Assert.IsTrue(saveManager.SaveFiles.Count() == 1);
-
-		saveManager.PlayerName = "Donald";
-		saveManager.PlayerAge = 30;
-		Assert.AreEqual("Donald", saveManager.PlayerName);
-		Assert.AreEqual(30, saveManager.PlayerAge);
-		saveManager.LoadAutoSave();
-		Assert.AreEqual("Donny", saveManager.PlayerName);
-		Assert.AreEqual(27, saveManager.PlayerAge);
-	}
-
-	[TestMethod]
-	public void SafeSaveTest()
-	{
-		var saveDirectory = new DirectoryInfo("SafeSaveTests");
-		if (saveDirectory.Exists)
-		{
-			saveDirectory.Delete(true);
-			Thread.Sleep(10);
-		}
-
-		var saveManager = new TestSaveManager(saveDirectory.Name, true)
+		var saveManager = new SwapSaveManager(saveDirectory.Name, true)
 		{
 			IsAutoSaveEnabled = false
 		};
@@ -130,7 +86,8 @@ public class SaveManagerBaseTest
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.1.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsFalse(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
@@ -138,7 +95,8 @@ public class SaveManagerBaseTest
 		files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.2.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
@@ -146,7 +104,8 @@ public class SaveManagerBaseTest
 		files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.3.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		Assert.AreEqual("Donald", saveManager.PlayerName);
 		Assert.AreEqual(29, saveManager.PlayerAge);
@@ -157,8 +116,8 @@ public class SaveManagerBaseTest
 		Assert.AreEqual(28, saveManager.PlayerAge);
 	}
 
-	[TestMethod]
-	public void ForceRevertTest()
+	[Test]
+	public void SwapForceRevertTest()
 	{
 		var saveDirectory = new DirectoryInfo("ForceRevertTests");
 		if (saveDirectory.Exists)
@@ -167,7 +126,7 @@ public class SaveManagerBaseTest
 			Thread.Sleep(10);
 		}
 
-		var saveManager = new TestSaveManager(saveDirectory.Name, false)
+		var saveManager = new SwapSaveManager(saveDirectory.Name, false)
 		{
 			IsAutoSaveEnabled = false
 		};
@@ -182,7 +141,8 @@ public class SaveManagerBaseTest
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.1.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsFalse(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
@@ -190,7 +150,8 @@ public class SaveManagerBaseTest
 		files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.2.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
@@ -198,7 +159,8 @@ public class SaveManagerBaseTest
 		files = saveManager.SaveFiles.ToArray();
 		Assert.IsTrue(files.Length == 1);
 		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.3.sav", files[0].Value);
+		Assert.AreEqual("TestSave.sav", files[0].Value);
+		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
 
 		Assert.AreEqual("Donald", saveManager.PlayerName);
 		Assert.AreEqual(29, saveManager.PlayerAge);
@@ -208,5 +170,4 @@ public class SaveManagerBaseTest
 		Assert.AreEqual("Donny", saveManager.PlayerName);
 		Assert.AreEqual(28, saveManager.PlayerAge);
 	}
-	#endregion
 }

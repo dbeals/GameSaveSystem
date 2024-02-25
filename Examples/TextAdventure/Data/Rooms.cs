@@ -41,7 +41,7 @@ public static class Rooms
 	#endregion
 
 	#region Variables
-	private static readonly RoomCollection _rooms = [];
+	private static readonly RoomCollection _rooms = new ();
 	#endregion
 
 	#region Constructors

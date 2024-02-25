@@ -25,8 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using NUnit.Framework;
-
 namespace GameSaveSystem.Tests;
 
 [TestFixture]

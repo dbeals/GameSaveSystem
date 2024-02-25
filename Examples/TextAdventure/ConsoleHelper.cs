@@ -25,7 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System;
 using System.Text;
 
 namespace TextAdventure;

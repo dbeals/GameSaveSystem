@@ -25,9 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System;
-using System.IO;
-
 namespace GameSaveSystem.Tests;
 
 public sealed class TestSaveManager : SaveManagerBase
@@ -78,12 +75,18 @@ public sealed class TestSaveManager : SaveManagerBase
 			if (key != FileKey)
 				return false;
 
-			var version = Version.Parse(reader.ReadLine());
+			var line = reader.ReadLine();
+			if (string.IsNullOrEmpty(line))
+				return false;
+			var version = Version.Parse(line);
 			if (version != CurrentVersion)
 				return false;
 
 			PlayerName = reader.ReadLine();
-			PlayerAge = int.Parse(reader.ReadLine());
+
+			line = reader.ReadLine();
+			if (string.IsNullOrEmpty(line) || !int.TryParse(line, out PlayerAge))
+				return false;
 			return true;
 		}
 		catch

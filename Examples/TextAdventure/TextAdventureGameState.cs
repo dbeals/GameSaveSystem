@@ -25,7 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System.IO;
 using ExamplesCore;
 using TextAdventure.Data;
 

@@ -25,111 +25,101 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System;
-using System.Linq;
+using TextAdventure;
 
-namespace TextAdventure;
+var saveManager = new TextAdventureSaveManager();
+saveManager.StartNewGame("intro");
 
-internal static class Program
+while (saveManager.CurrentGameState.CurrentRoom != null)
 {
-	#region Methods
-	private static void Main()
+	Console.Clear();
+
+	TryWriteStateMessage(saveManager);
+
+	Console.WriteLine(ConsoleHelper.FitString(saveManager.CurrentGameState.CurrentRoom.Description ?? "..."));
+	Console.WriteLine();
+
+	WriteActions(saveManager);
+	WriteMenu(saveManager);
+
+	HandleInput(saveManager);
+}
+
+Console.WriteLine("Press any key to continue");
+Console.ReadKey(true);
+return;
+
+static void HandleInput(TextAdventureSaveManager saveManager)
+{
+	var state = saveManager.CurrentGameState;
+	var key = Console.ReadKey(true);
+	if (state.CurrentRoom.CanSave && char.ToUpper(key.KeyChar) == 'S')
 	{
-		var saveManager = new TextAdventureSaveManager();
-		saveManager.StartNewGame("intro");
-
-		while (saveManager.CurrentGameState.CurrentRoom != null)
-		{
-			Console.Clear();
-
-			TryWriteStateMessage(saveManager);
-
-			Console.WriteLine(ConsoleHelper.FitString(saveManager.CurrentGameState.CurrentRoom.Description ?? "..."));
-			Console.WriteLine();
-
-			WriteActions(saveManager);
-			WriteMenu(saveManager);
-
-			HandleInput(saveManager);
-		}
-
-		Console.WriteLine("Press any key to continue");
-		Console.ReadKey(true);
+		SaveState(saveManager);
+		return;
 	}
 
-	private static void HandleInput(TextAdventureSaveManager saveManager)
+	if (state.CurrentRoom.CanLoad && char.ToUpper(key.KeyChar) == 'L')
 	{
-		var state = saveManager.CurrentGameState;
-		var key = Console.ReadKey(true);
-		if (state.CurrentRoom.CanSave && char.ToUpper(key.KeyChar) == 'S')
-		{
-			SaveState(saveManager);
-			return;
-		}
-
-		if (state.CurrentRoom.CanLoad && char.ToUpper(key.KeyChar) == 'L')
-		{
-			LoadState(saveManager);
-			return;
-		}
-
-		if (state.CurrentRoom.CanExit && char.ToUpper(key.KeyChar) == 'E')
-		{
-			saveManager.CurrentGameState.CurrentRoom = null;
-			return;
-		}
-
-		if (!int.TryParse(key.KeyChar.ToString(), out var keyNumber) || keyNumber < 1 || keyNumber > saveManager.CurrentRoomActions.Length)
-		{
-			state.LastMessage = $"You must enter a number that is between 1 and {saveManager.CurrentRoomActions.Length}.";
-			state.LastMessageIsError = true;
-			return;
-		}
-
-		saveManager.CurrentRoomActions[keyNumber - 1].Action(saveManager);
+		LoadState(saveManager);
+		return;
 	}
 
-	private static void WriteActions(TextAdventureSaveManager saveManager)
+	if (state.CurrentRoom.CanExit && char.ToUpper(key.KeyChar) == 'E')
 	{
-		var activeActions = saveManager.CurrentGameState.CurrentRoom.Actions.Where(action => action.StateTest == null || action.StateTest(saveManager)).ToArray();
-		saveManager.CurrentRoomActions = activeActions;
-		for (var index = 0; index < activeActions.Length; ++index)
-			Console.WriteLine($"{index + 1}) {activeActions[index].Description}");
+		saveManager.CurrentGameState.CurrentRoom = null;
+		return;
 	}
 
-	private static void LoadState(TextAdventureSaveManager saveManager)
+	if (!int.TryParse(key.KeyChar.ToString(), out var keyNumber) || keyNumber < 1 || keyNumber > saveManager.CurrentRoomActions.Length)
 	{
-		saveManager.LoadGame("TextAdventure");
-		saveManager.CurrentGameState.LastMessage = "Game loaded successfully.";
-		saveManager.CurrentGameState.LastMessageIsError = false;
+		state.LastMessage = $"You must enter a number that is between 1 and {saveManager.CurrentRoomActions.Length}.";
+		state.LastMessageIsError = true;
+		return;
 	}
 
-	private static void SaveState(TextAdventureSaveManager saveManager)
-	{
-		saveManager.SaveGame("TextAdventure");
-		saveManager.CurrentGameState.LastMessage = "Game saved successfully.";
-		saveManager.CurrentGameState.LastMessageIsError = false;
-	}
+	saveManager.CurrentRoomActions[keyNumber - 1].Action(saveManager);
+}
 
-	private static void WriteMenu(TextAdventureSaveManager saveManager)
-	{
-		Console.WriteLine();
-		if (saveManager.CurrentGameState.CurrentRoom.CanSave)
-			Console.WriteLine("S) Save");
-		if (saveManager.CurrentGameState.CurrentRoom.CanLoad)
-			Console.WriteLine("L) Load");
-		if (saveManager.CurrentGameState.CurrentRoom.CanExit)
-			Console.WriteLine("E) Exit");
-	}
+static void WriteActions(TextAdventureSaveManager saveManager)
+{
+	var activeActions = saveManager.CurrentGameState.CurrentRoom.Actions.Where(action => action.StateTest == null || action.StateTest(saveManager)).ToArray();
+	saveManager.CurrentRoomActions = activeActions;
+	for (var index = 0; index < activeActions.Length; ++index)
+		Console.WriteLine($"{index + 1}) {activeActions[index].Description}");
+}
 
-	private static void TryWriteStateMessage(TextAdventureSaveManager saveManager)
-	{
-		if (string.IsNullOrWhiteSpace(saveManager.CurrentGameState.LastMessage))
-			return;
+static void LoadState(TextAdventureSaveManager saveManager)
+{
+	saveManager.LoadGame("TextAdventure");
+	saveManager.CurrentGameState.LastMessage = "Game loaded successfully.";
+	saveManager.CurrentGameState.LastMessageIsError = false;
+}
 
-		ConsoleHelper.WriteLineInColor(saveManager.CurrentGameState.LastMessageIsError ? ConsoleColor.Red : ConsoleColor.DarkGreen, saveManager.CurrentGameState.LastMessage);
-		saveManager.CurrentGameState.LastMessage = string.Empty;
-		saveManager.CurrentGameState.LastMessageIsError = false;
-	}
-	#endregion
+static void SaveState(TextAdventureSaveManager saveManager)
+{
+	saveManager.SaveGame("TextAdventure");
+	saveManager.CurrentGameState.LastMessage = "Game saved successfully.";
+	saveManager.CurrentGameState.LastMessageIsError = false;
+}
+
+static void WriteMenu(TextAdventureSaveManager saveManager)
+{
+	Console.WriteLine();
+	if (saveManager.CurrentGameState.CurrentRoom.CanSave)
+		Console.WriteLine("S) Save");
+	if (saveManager.CurrentGameState.CurrentRoom.CanLoad)
+		Console.WriteLine("L) Load");
+	if (saveManager.CurrentGameState.CurrentRoom.CanExit)
+		Console.WriteLine("E) Exit");
+}
+
+static void TryWriteStateMessage(TextAdventureSaveManager saveManager)
+{
+	if (string.IsNullOrWhiteSpace(saveManager.CurrentGameState.LastMessage))
+		return;
+
+	ConsoleHelper.WriteLineInColor(saveManager.CurrentGameState.LastMessageIsError ? ConsoleColor.Red : ConsoleColor.DarkGreen, saveManager.CurrentGameState.LastMessage);
+	saveManager.CurrentGameState.LastMessage = string.Empty;
+	saveManager.CurrentGameState.LastMessageIsError = false;
 }

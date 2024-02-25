@@ -25,9 +25,6 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
-using System;
-using System.IO;
-
 namespace GameSaveSystem.Tests;
 
 public sealed class SwapSaveManager : SwapSaveManagerBase

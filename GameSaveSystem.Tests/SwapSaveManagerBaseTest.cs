@@ -46,14 +46,14 @@ public class SwapSaveManagerBaseTest
 		};
 
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 		saveManager.Update(450.0f);
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 		saveManager.Update(450.0f);
 		saveDirectory.Refresh();
-		Assert.IsTrue(saveDirectory.Exists);
-		Assert.IsTrue(saveManager.SaveFiles.Count() == 1);
+		Assert.That(saveDirectory.Exists, Is.True);
+		Assert.That(saveManager.SaveFiles.Count(), Is.EqualTo(1));
 	}
 
 	[Test]
@@ -71,44 +71,44 @@ public class SwapSaveManagerBaseTest
 			IsAutoSaveEnabled = false
 		};
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 27;
 		saveManager.SaveGame("TestSave");
 		saveDirectory.Refresh();
-		Assert.IsTrue(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsFalse(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.False);
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
-		Assert.AreEqual("Donald", saveManager.PlayerName);
-		Assert.AreEqual(29, saveManager.PlayerAge);
+		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));
+		Assert.That(saveManager.PlayerAge, Is.EqualTo(29));
 		saveManager.LoadGame("TestSave");
 
 		// We should have reverted here as TestSave.3.sav should be corrupt.
-		Assert.AreEqual("Donny", saveManager.PlayerName);
-		Assert.AreEqual(28, saveManager.PlayerAge);
+		Assert.That(saveManager.PlayerName, Is.EqualTo("Donny"));
+		Assert.That(saveManager.PlayerAge, Is.EqualTo(28));
 	}
 
 	[Test]
@@ -126,43 +126,43 @@ public class SwapSaveManagerBaseTest
 			IsAutoSaveEnabled = false
 		};
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 27;
 		saveManager.SaveGame("TestSave");
 		saveDirectory.Refresh();
-		Assert.IsTrue(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsFalse(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.False);
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 1);
-		Assert.AreEqual("TestSave.sav", files[0].Key);
-		Assert.AreEqual("TestSave.sav", files[0].Value);
-		Assert.IsTrue(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")));
+		Assert.That(files, Has.Length.EqualTo(1));
+		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
-		Assert.AreEqual("Donald", saveManager.PlayerName);
-		Assert.AreEqual(29, saveManager.PlayerAge);
+		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));
+		Assert.That(saveManager.PlayerAge, Is.EqualTo(29));
 		saveManager.LoadGame("TestSave", true);
 
 		// We should have reverted here we requested it.
-		Assert.AreEqual("Donny", saveManager.PlayerName);
-		Assert.AreEqual(28, saveManager.PlayerAge);
+		Assert.That(saveManager.PlayerName, Is.EqualTo("Donny"));
+		Assert.That(saveManager.PlayerAge, Is.EqualTo(28));
 	}
 }

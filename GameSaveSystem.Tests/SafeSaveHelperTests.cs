@@ -25,6 +25,8 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
+using static NUnit.Framework.Assert;
+
 namespace GameSaveSystem.Tests;
 
 [TestFixture]
@@ -34,20 +36,20 @@ public class SafeSaveHelperTests
 	public void GetBaseFileNameTest_2Part()
 	{
 		var result = SafeSaveHelper.GetBaseFileName("FileName.Extension");
-		Assert.AreEqual("FileName.Extension", result);
+		That(result, Is.EqualTo("FileName.Extension"));
 	}
 
 	[Test]
 	public void GetBaseFileNameTest_3Part()
 	{
 		var result = SafeSaveHelper.GetBaseFileName("FileName.1.Extension");
-		Assert.AreEqual("FileName.Extension", result);
+		That(result, Is.EqualTo("FileName.Extension"));
 	}
 
 	[Test]
 	public void GetBaseFileNameTest_Invalid()
 	{
-		Assert.Throws<ArgumentException>(() =>
+		Throws<ArgumentException>(() =>
 		{
 			_ = SafeSaveHelper.GetBaseFileName("FileName.1.2.Extension");
 		});
@@ -57,20 +59,20 @@ public class SafeSaveHelperTests
 	public void GetIncrementalFileNameTest_2Part()
 	{
 		var result = SafeSaveHelper.GetIncrementalFileName("FileName.Extension", 1);
-		Assert.AreEqual("FileName.1.Extension", result);
+		That(result, Is.EqualTo("FileName.1.Extension"));
 	}
 
 	[Test]
 	public void GetIncrementalFileNameTest_3Part()
 	{
 		var result = SafeSaveHelper.GetIncrementalFileName("FileName.1.Extension", 2);
-		Assert.AreEqual("FileName.2.Extension", result);
+		That(result, Is.EqualTo("FileName.2.Extension"));
 	}
 
 	[Test]
 	public void GetIncrementalFileNameTest_Invalid()
 	{
-		Assert.Throws<ArgumentException>(() =>
+		Throws<ArgumentException>(() =>
 		{
 			_ = SafeSaveHelper.GetIncrementalFileName("FileName.1.2.Extension", 3);
 		});
@@ -80,20 +82,20 @@ public class SafeSaveHelperTests
 	public void IncrementFileNameTest_Normal()
 	{
 		var result = SafeSaveHelper.IncrementFileName("FileName.1.Extension", 3);
-		Assert.AreEqual("FileName.2.Extension", result);
+		That(result, Is.EqualTo("FileName.2.Extension"));
 	}
 
 	[Test]
 	public void IncrementFileNameTest_Wrap()
 	{
 		var result = SafeSaveHelper.IncrementFileName("FileName.3.Extension", 3);
-		Assert.AreEqual("FileName.1.Extension", result);
+		That(result, Is.EqualTo("FileName.1.Extension"));
 	}
 
 	[Test]
 	public void IncrementFileNameTest_TooManyParts()
 	{
-		Assert.Throws<ArgumentException>(() =>
+		Throws<ArgumentException>(() =>
 		{
 			_ = SafeSaveHelper.IncrementFileName("FileName.1.2.Extension", 3);
 		});
@@ -102,7 +104,7 @@ public class SafeSaveHelperTests
 	[Test]
 	public void IncrementFileNameTest_NonInt()
 	{
-		Assert.Throws<ArgumentException>(() =>
+		Throws<ArgumentException>(() =>
 		{
 			_ = SafeSaveHelper.IncrementFileName("FileName.One.Extension", 3);
 		});
@@ -112,20 +114,20 @@ public class SafeSaveHelperTests
 	public void GetSearchPatternFromFileNameTest_2Part()
 	{
 		var result = SafeSaveHelper.GetSearchPatternFromFileName("FileName.Extension");
-		Assert.AreEqual("FileName.*.Extension", result);
+		That(result, Is.EqualTo("FileName.*.Extension"));
 	}
 
 	[Test]
 	public void GetSearchPatternFromFileNameTest_3Part()
 	{
 		var result = SafeSaveHelper.GetSearchPatternFromFileName("FileName.3.Extension");
-		Assert.AreEqual("FileName.*.Extension", result);
+		That(result, Is.EqualTo("FileName.*.Extension"));
 	}
 
 	[Test]
 	public void GetSearchPatternFromFileNameTest_Invalid()
 	{
-		Assert.Throws<ArgumentException>(() =>
+		Throws<ArgumentException>(() =>
 		{
 			_ = SafeSaveHelper.GetSearchPatternFromFileName("FileName.1.3.Extension");
 		});
@@ -135,14 +137,14 @@ public class SafeSaveHelperTests
 	public void AddFileExtensionTest_WithDot()
 	{
 		var result = SafeSaveHelper.AddFileExtension("FileName", ".Extension");
-		Assert.AreEqual("FileName.Extension", result);
+		That(result, Is.EqualTo("FileName.Extension"));
 	}
 
 	[Test]
 	public void AddFileExtensionTest_WithoutDot()
 	{
 		var result = SafeSaveHelper.AddFileExtension("FileName", "Extension");
-		Assert.AreEqual("FileName.Extension", result);
+		That(result, Is.EqualTo("FileName.Extension"));
 	}
 
 	[Test]
@@ -152,7 +154,7 @@ public class SafeSaveHelperTests
 		if (saveDirectory.Exists)
 			saveDirectory.Delete();
 
-		Assert.IsNull(SafeSaveHelper.LoadGame(saveDirectory.FullName, "Save.game", false, null));
+		That(SafeSaveHelper.LoadGame(saveDirectory.FullName, "Save.game", false, null), Is.Null);
 	}
 
 	[Test]
@@ -166,7 +168,7 @@ public class SafeSaveHelperTests
 			saveDirectory.Create();
 		}
 
-		Assert.IsNull(SafeSaveHelper.LoadGame(saveDirectory.FullName, "Save.game", false, null));
+		That(SafeSaveHelper.LoadGame(saveDirectory.FullName, "Save.game", false, null), Is.Null);
 	}
 
 	[Test]
@@ -190,8 +192,8 @@ public class SafeSaveHelperTests
 		file = new FileInfo(Path.Combine(saveDirectory.FullName, "FileName.3.Extension"));
 		File.WriteAllText(file.FullName, "FileSave");
 
-		Assert.AreEqual(3, saveDirectory.EnumerateFiles().Count());
+		That(saveDirectory.EnumerateFiles().Count(), Is.EqualTo(3));
 		SafeSaveHelper.CleanseSaveByBaseName(saveDirectory.FullName, "FileName.Extension");
-		Assert.AreEqual(0, saveDirectory.EnumerateFiles().Count());
+		That(saveDirectory.EnumerateFiles().Count(), Is.EqualTo(0));
 	}
 }

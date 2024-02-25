@@ -43,14 +43,14 @@ public class ExportImportTest
 		}
 
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 
 		var exportFile = new FileInfo("SaveGameExport.zip");
 		if (exportFile.Exists)
 			exportFile.Delete();
 
 		exportFile.Refresh();
-		Assert.IsFalse(exportFile.Exists);
+		Assert.That(exportFile.Exists, Is.False);
 
 		_testSaveManager = new TestSaveManager(saveDirectory.Name, false)
 		{
@@ -74,12 +74,14 @@ public class ExportImportTest
 	public void ExportTest()
 	{
 		var files = _testSaveManager.SaveFiles.ToArray();
-		Assert.IsTrue(files.Length == 2);
-		Assert.AreEqual("ExportTest1.sav", files[0].Key);
-		Assert.AreEqual("ExportTest1.2.sav", files[0].Value);
-		Assert.AreEqual("ExportTest2.sav", files[1].Key);
-		Assert.AreEqual("ExportTest2.1.sav", files[1].Value);
-
+		Assert.Multiple(() =>
+		{
+			Assert.That(files, Has.Length.EqualTo(2));
+			Assert.That(files[0].Key, Is.EqualTo("ExportTest1.sav"));
+			Assert.That(files[0].Value, Is.EqualTo("ExportTest1.2.sav"));
+			Assert.That(files[1].Key, Is.EqualTo("ExportTest2.sav"));
+			Assert.That(files[1].Value, Is.EqualTo("ExportTest2.1.sav"));
+		});
 		var exportContents = new List<string>
 		{
 			files[0].Key,
@@ -87,12 +89,12 @@ public class ExportImportTest
 		};
 
 		var exportFile = new FileInfo("SaveGameExport.zip");
-		Assert.IsTrue(exportFile.Exists);
+		Assert.That(exportFile.Exists, Is.True);
 
 		var zipFile = new ZipFile(exportFile.Name);
 		foreach (ZipEntry entry in zipFile)
-			Assert.IsTrue(exportContents.Remove(entry.Name));
-		Assert.IsTrue(exportContents.Count == 0);
+			Assert.That(exportContents.Remove(entry.Name), Is.True);
+		Assert.That(exportContents, Is.Empty);
 		zipFile.Close();
 	}
 
@@ -107,13 +109,13 @@ public class ExportImportTest
 			saveDirectory.Refresh();
 		}
 
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 
 		var exportFile = new FileInfo("SaveGameExport.zip");
-		Assert.IsTrue(exportFile.Exists);
+		Assert.That(exportFile.Exists, Is.True);
 		_testSaveManager.Import(exportFile.Name);
 
 		saveDirectory.Refresh();
-		Assert.AreEqual(2, saveDirectory.EnumerateFiles().Count());
+		Assert.That(saveDirectory.EnumerateFiles().Count(), Is.EqualTo(2));
 	}
 }

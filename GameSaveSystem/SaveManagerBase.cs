@@ -75,7 +75,7 @@ public abstract class SaveManagerBase
 
 	public void QuickSave()
 	{
-		SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, SaveType.QuickSave, OnSaveRequested);
+		SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(QuickSaveName, FileExtension), MaximumAutoSaveCount, SaveType.QuickSave, OnSaveRequested);
 	}
 
 	public void LoadQuickSave(bool forceRevert = false)

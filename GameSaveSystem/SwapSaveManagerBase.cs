@@ -27,7 +27,7 @@
 
 namespace GameSaveSystem;
 
-public abstract class SwapSaveManagerBase
+public abstract class SwapSaveManagerBase : ISaveManager
 {
 	#region Variables
 	private float _autoSaveTimeElapsedInSeconds;
@@ -41,7 +41,21 @@ public abstract class SwapSaveManagerBase
 	public string RootPath { get; set; }
 	public string AutoSaveFileNamePrefix { get; set; }
 	public float AutoSaveIntervalInSeconds { get; set; }
+
+	public int MaximumAutoSaveCount
+	{
+		get => 1;
+		set => throw new NotSupportedException();
+	}
+
+	public int MaximumSafeSaveCount
+	{
+		get => 1;
+		set => throw new NotSupportedException();
+	}
+
 	public bool IsAutoSaveEnabled { get; set; }
+	public string QuickSaveName { get; set; } = "Quick Save";
 	#endregion
 
 	#region Constructors
@@ -56,7 +70,7 @@ public abstract class SwapSaveManagerBase
 	#region Methods
 	public void SaveGame(string fileNameWithoutExtension)
 	{
-		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveRequested);
+		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), SaveType.Manual, OnSaveRequested);
 	}
 
 	public void LoadGame(string fileNameWithoutExtension, bool forceRevert = false)
@@ -64,9 +78,24 @@ public abstract class SwapSaveManagerBase
 		SwapSafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), forceRevert, OnLoadRequested);
 	}
 
+	public void QuickSave()
+	{
+		SafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), MaximumAutoSaveCount, SaveType.QuickSave, OnSaveRequested);
+	}
+
+	public void LoadQuickSave(bool forceRevert = false)
+	{
+		LoadGame(QuickSaveName, forceRevert);
+	}
+
 	public void AutoSave()
 	{
-		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), OnSaveRequested);
+		SwapSafeSaveHelper.SaveGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), SaveType.AutoSave, OnSaveRequested);
+	}
+
+	public void LoadAutoSave(bool forceRevert = false)
+	{
+		SafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), forceRevert, OnLoadRequested);
 	}
 
 	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
@@ -92,7 +121,7 @@ public abstract class SwapSaveManagerBase
 		AutoSave();
 	}
 
-	protected abstract void OnSaveRequested(string fullFilePath);
+	protected abstract void OnSaveRequested(SaveType saveType, string fullFilePath);
 	protected abstract bool OnLoadRequested(string fullFilePath);
 	#endregion
 }

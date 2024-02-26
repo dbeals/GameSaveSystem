@@ -28,6 +28,7 @@
 namespace GameSaveSystem;
 
 public abstract class SaveManagerBase
+	: ISaveManager
 {
 	#region Variables
 	private float _autoSaveTimeElapsedInSeconds;

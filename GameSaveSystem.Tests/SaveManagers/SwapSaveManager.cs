@@ -50,7 +50,7 @@ public sealed class SwapSaveManager : SwapSaveManagerBase
 	#endregion
 
 	#region Methods
-	protected override void OnSaveRequested(string fullFilePath)
+	protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
 	{
 		++_saveCount;
 		using var stream = File.OpenWrite(fullFilePath);

@@ -11,4 +11,13 @@
         <PackageReference Include="SharpZipLib" Version="1.4.2"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="SaveManagerBase.cs">
+        <DependentUpon>ISaveManager.cs</DependentUpon>
+      </Compile>
+      <Compile Update="SwapSaveManagerBase.cs">
+        <DependentUpon>ISaveManager.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

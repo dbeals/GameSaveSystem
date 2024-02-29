@@ -5,6 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <LangVersion>default</LangVersion>
+        <Title>Game Save System</Title>
+        <Authors>Beals Software</Authors>
+        <PackageProjectUrl>https://github.com/dbeals/GameSaveSystem</PackageProjectUrl>
+        <PackageLicenseUrl>https://choosealicense.com/licenses/unlicense/</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>

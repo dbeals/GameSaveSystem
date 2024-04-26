@@ -59,6 +59,9 @@ public abstract class SwapSaveManagerBase : ISaveManager
 	#endregion
 
 	#region Constructors
+	protected SwapSaveManagerBase()
+		: this("Saves/", "Auto Save", 900f) { }
+
 	protected SwapSaveManagerBase(string rootPath, string autoSaveFileNamePrefix, float autoSaveIntervalInSeconds)
 	{
 		RootPath = rootPath;

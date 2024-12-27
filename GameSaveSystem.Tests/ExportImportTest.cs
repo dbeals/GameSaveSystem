@@ -77,15 +77,15 @@ public class ExportImportTest
 		Assert.Multiple(() =>
 		{
 			Assert.That(files, Has.Length.EqualTo(2));
-			Assert.That(files[0].Key, Is.EqualTo("ExportTest1.sav"));
-			Assert.That(files[0].Value, Is.EqualTo("ExportTest1.2.sav"));
-			Assert.That(files[1].Key, Is.EqualTo("ExportTest2.sav"));
-			Assert.That(files[1].Value, Is.EqualTo("ExportTest2.1.sav"));
+			Assert.That(files[0].SaveGroup, Is.EqualTo("ExportTest1.sav"));
+			Assert.That(files[0].FileInfo.Name, Is.EqualTo("ExportTest1.2.sav"));
+			Assert.That(files[1].SaveGroup, Is.EqualTo("ExportTest2.sav"));
+			Assert.That(files[1].FileInfo.Name, Is.EqualTo("ExportTest2.1.sav"));
 		});
 		var exportContents = new List<string>
 		{
-			files[0].Key,
-			files[1].Key
+			files[0].SaveGroup,
+			files[1].SaveGroup
 		};
 
 		var exportFile = new FileInfo("SaveGameExport.zip");

@@ -161,26 +161,26 @@ public static class SafeSaveHelper
 	}
 
 	/// <summary>
-	///     Enumerates all of the save files, returning the base name (FileName.Extension) as well as the most recent
+	///     Enumerates all the save files, returning the base name (FileName.Extension) as well as the most recent
 	///     incremental version (FileName.Index.Extension.)
 	/// </summary>
 	/// <param name="rootPath">The root path to the save folder.</param>
 	/// <param name="fileExtension">The save file extension to use.</param>
 	/// <returns>
-	///     A list of pairs containing the base name (FileName.Extension) as the Key and the incremental file
-	///     (FileName.Index.Extension) as the Value.
+	///     A list of <see cref="SaveFileInfo"/> containing the base name (FileName.Extension) as the SaveGroup and the incremental file
+	///     <see cref="FileInfo"/> as the Value.
 	/// </returns>
-	public static IEnumerable<KeyValuePair<string, string>> EnumerateSaveFiles(string rootPath, string fileExtension)
+	public static IEnumerable<SaveFileInfo> EnumerateSaveFiles(string rootPath, string fileExtension)
 	{
 		var directoryInfo = new DirectoryInfo(rootPath);
 		if (!directoryInfo.Exists)
-			return Enumerable.Empty<KeyValuePair<string, string>>();
+			return [];
 
 		return from fileInfo in directoryInfo.EnumerateFiles(AddFileExtension("*", fileExtension))
 			orderby GetFileSortValue(fileInfo) descending
 			group fileInfo by GetBaseFileName(fileInfo.Name)
 			into fileGroup
-			select new KeyValuePair<string, string>(fileGroup.Key, fileGroup.First().Name);
+			select new SaveFileInfo(fileGroup.Key, fileGroup.First());
 	}
 
 	/// <summary>

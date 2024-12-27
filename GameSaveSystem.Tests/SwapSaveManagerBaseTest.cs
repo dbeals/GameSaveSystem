@@ -80,8 +80,8 @@ public class SwapSaveManagerBaseTest
 		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.False);
 
 		saveManager.PlayerName = "Donny";
@@ -89,8 +89,8 @@ public class SwapSaveManagerBaseTest
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		saveManager.PlayerName = "Donald";
@@ -98,8 +98,8 @@ public class SwapSaveManagerBaseTest
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));
@@ -135,8 +135,8 @@ public class SwapSaveManagerBaseTest
 		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.False);
 
 		saveManager.PlayerName = "Donny";
@@ -144,8 +144,8 @@ public class SwapSaveManagerBaseTest
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		saveManager.PlayerName = "Donald";
@@ -153,8 +153,8 @@ public class SwapSaveManagerBaseTest
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.sav"));
 		Assert.That(File.Exists(Path.Combine(saveDirectory.FullName, "TestSave.sav.bak")), Is.True);
 
 		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));

@@ -37,7 +37,7 @@ public abstract class SwapSaveManagerBase : ISaveManager
 	public abstract string FileExtension { get; }
 	public abstract string FileKey { get; }
 	public abstract Version CurrentVersion { get; }
-	public IEnumerable<KeyValuePair<string, string>> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
+	public IEnumerable<SaveFileInfo> SaveFiles => SafeSaveHelper.EnumerateSaveFiles(RootPath, FileExtension);
 	public string RootPath { get; set; }
 	public string AutoSaveFileNamePrefix { get; set; }
 	public float AutoSaveIntervalInSeconds { get; set; }
@@ -103,7 +103,7 @@ public abstract class SwapSaveManagerBase : ISaveManager
 
 	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
 	{
-		ImportExportHelper.Export(RootPath, SaveFiles, exportFileName, compressionLevel, password);
+		ImportExportHelper.Export(SaveFiles, exportFileName, compressionLevel, password);
 	}
 
 	public void Import(string importFileName)

@@ -33,17 +33,16 @@ namespace GameSaveSystem;
 public static class ImportExportHelper
 {
 	#region Methods
-	public static void Export(string rootPath, IEnumerable<KeyValuePair<string, string>> saveFiles, string exportFileName, int compressionLevel = 3, string password = null)
+	public static void Export(IEnumerable<SaveFileInfo> saveFiles, string exportFileName, int compressionLevel = 3, string password = null)
 	{
 		using var fileStream = File.Create(exportFileName);
 		using var outputStream = new ZipOutputStream(fileStream);
 
 		outputStream.SetLevel(compressionLevel);
 		outputStream.Password = password;
-		foreach (var file in saveFiles)
+		foreach (var (saveGroup, fileInfo) in saveFiles)
 		{
-			var fileName = file.Key.Replace('\\', '/');
-			var fileInfo = new FileInfo(Path.Combine(rootPath, file.Value));
+			var fileName = saveGroup.Replace('\\', '/');
 			var entry = new ZipEntry(ZipEntry.CleanName(fileName))
 			{
 				DateTime = fileInfo.LastWriteTime,

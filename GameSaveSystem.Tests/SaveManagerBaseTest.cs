@@ -126,24 +126,24 @@ public class SaveManagerBaseTest
 		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.1.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.1.sav"));
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.2.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.2.sav"));
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.3.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.3.sav"));
 
 		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));
 		Assert.That(saveManager.PlayerAge, Is.EqualTo(29));
@@ -178,24 +178,24 @@ public class SaveManagerBaseTest
 		Assert.That(saveDirectory.Exists, Is.True);
 		var files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.1.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.1.sav"));
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 28;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.2.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.2.sav"));
 
 		saveManager.PlayerName = "Donald";
 		saveManager.PlayerAge = 29;
 		saveManager.SaveGame("TestSave");
 		files = saveManager.SaveFiles.ToArray();
 		Assert.That(files, Has.Length.EqualTo(1));
-		Assert.That(files[0].Key, Is.EqualTo("TestSave.sav"));
-		Assert.That(files[0].Value, Is.EqualTo("TestSave.3.sav"));
+		Assert.That(files[0].SaveGroup, Is.EqualTo("TestSave.sav"));
+		Assert.That(files[0].FileInfo.Name, Is.EqualTo("TestSave.3.sav"));
 
 		Assert.That(saveManager.PlayerName, Is.EqualTo("Donald"));
 		Assert.That(saveManager.PlayerAge, Is.EqualTo(29));

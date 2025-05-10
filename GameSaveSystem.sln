@@ -1,14 +1,14 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSaveSystem", "GameSaveSystem\GameSaveSystem.csproj", "{399C9FE1-E286-4827-853C-7FF8BE593F21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSaveSystem", "GameSaveSystem\GameSaveSystem.csproj", "{399C9FE1-E286-4827-853C-7FF8BE593F21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSaveSystem.Tests", "GameSaveSystem.Tests\GameSaveSystem.Tests.csproj", "{4C6FF34B-2268-4264-B7BC-4020FD5CB997}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSaveSystem.Tests", "GameSaveSystem.Tests\GameSaveSystem.Tests.csproj", "{4C6FF34B-2268-4264-B7BC-4020FD5CB997}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{3ACC6550-2C01-48B5-926A-2461DC693305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamplesCore", "Examples\ExamplesCore\ExamplesCore.csproj", "{E6289770-B008-44E7-8786-F1751CCB7E14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplesCore", "Examples\ExamplesCore\ExamplesCore.csproj", "{E6289770-B008-44E7-8786-F1751CCB7E14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAdventure", "Examples\TextAdventure\TextAdventure.csproj", "{E3A97316-00DC-4377-9D78-830A0FE182F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextAdventure", "Examples\TextAdventure\TextAdventure.csproj", "{E3A97316-00DC-4377-9D78-830A0FE182F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

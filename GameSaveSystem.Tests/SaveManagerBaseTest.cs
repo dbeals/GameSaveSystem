@@ -90,7 +90,7 @@ public class SaveManagerBaseTest
 		saveManager.PlayerAge = 27;
 		saveManager.Update(900.0f);
 		saveDirectory.Refresh();
-		Assert.IsTrue(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.True);
 		Assert.That(saveManager.SaveFiles.Count(), Is.EqualTo(1));
 
 		saveManager.PlayerName = "Donald";
@@ -169,7 +169,7 @@ public class SaveManagerBaseTest
 			IsAutoSaveEnabled = false
 		};
 		saveDirectory.Refresh();
-		Assert.IsFalse(saveDirectory.Exists);
+		Assert.That(saveDirectory.Exists, Is.False);
 
 		saveManager.PlayerName = "Donny";
 		saveManager.PlayerAge = 27;

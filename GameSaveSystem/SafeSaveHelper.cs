@@ -161,6 +161,33 @@ public static class SafeSaveHelper
 	}
 
 	/// <summary>
+	///		Deletes the files for a named save file.
+	/// </summary>
+	/// <param name="rootPath">The root path to the save folder.</param>
+	/// <param name="fileName">The file name to use (in FileName.Extension format.)</param>
+	/// <returns>True if the file was deleted, otherwise false.</returns>
+	public static bool DeleteGame(string rootPath, string fileName)
+	{
+		var directoryInfo = new DirectoryInfo(rootPath);
+		if (!directoryInfo.Exists)
+			return false;
+
+		var fileInfos = (from fileInfo in directoryInfo.EnumerateFiles(GetSearchPatternFromFileName(fileName))
+			orderby GetFileSortValue(fileInfo) descending
+			select fileInfo).ToArray();
+
+		foreach (var fileInfo in fileInfos)
+		{
+			if (!fileInfo.Exists)
+				continue;
+
+			fileInfo.Delete();
+		}
+
+		return true;
+	}
+
+	/// <summary>
 	///     Enumerates all the save files, returning the base name (FileName.Extension) as well as the most recent
 	///     incremental version (FileName.Index.Extension.)
 	/// </summary>

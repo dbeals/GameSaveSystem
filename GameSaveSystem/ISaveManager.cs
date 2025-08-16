@@ -50,6 +50,7 @@ public interface ISaveManager
 	void LoadQuickSave(bool forceRevert = false);
 	void AutoSave();
 	void LoadAutoSave(bool forceRevert = false);
+	void DeleteSave(string fileNameWithoutExtension);
 	void Export(string exportFileName, int compressionLevel = 3, string password = null);
 	void Import(string importFileName);
 	void Update(float deltaInSeconds);

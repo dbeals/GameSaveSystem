@@ -101,6 +101,11 @@ public abstract class SwapSaveManagerBase : ISaveManager
 		SafeSaveHelper.LoadGame(RootPath, SafeSaveHelper.AddFileExtension(AutoSaveFileNamePrefix, FileExtension), forceRevert, OnLoadRequested);
 	}
 
+	public void DeleteSave(string fileNameWithoutExtension)
+	{
+		SafeSaveHelper.DeleteGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension));
+	}
+
 	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
 	{
 		ImportExportHelper.Export(SaveFiles, exportFileName, compressionLevel, password);

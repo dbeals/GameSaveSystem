@@ -25,6 +25,8 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
+using GameSaveSystem.Tests.SaveManagers;
+
 namespace GameSaveSystem.Tests;
 
 [TestFixture]

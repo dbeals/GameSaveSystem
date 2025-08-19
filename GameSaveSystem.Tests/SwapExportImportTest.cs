@@ -25,6 +25,7 @@
 // For more information, please refer to <http://unlicense.org/>
 // ***********************************************************************/
 
+using GameSaveSystem.Tests.SaveManagers;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace GameSaveSystem.Tests;

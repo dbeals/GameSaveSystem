@@ -50,6 +50,8 @@ public sealed class SwapSaveManager : SwapSaveManagerBase
 	#endregion
 
 	#region Methods
+	protected override void OnSaveDeleted(string saveName) { }
+
 	protected override void OnSaveRequested(SaveType saveType, string fullFilePath)
 	{
 		++_saveCount;

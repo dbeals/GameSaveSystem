@@ -103,7 +103,7 @@ public abstract class SwapSaveManagerBase : ISaveManager
 
 	public void DeleteSave(string fileNameWithoutExtension)
 	{
-		SafeSaveHelper.DeleteGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension));
+		SafeSaveHelper.DeleteGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveDeleted);
 	}
 
 	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
@@ -129,6 +129,7 @@ public abstract class SwapSaveManagerBase : ISaveManager
 		AutoSave();
 	}
 
+	protected abstract void OnSaveDeleted(string saveName);
 	protected abstract void OnSaveRequested(SaveType saveType, string fullFilePath);
 	protected abstract bool OnLoadRequested(string fullFilePath);
 	#endregion

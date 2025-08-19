@@ -160,13 +160,14 @@ public static class SafeSaveHelper
 		return (from fileInfo in fileInfos where loadCallback(Path.Combine(rootPath, fileInfo.Name)) select fileInfo.Name).FirstOrDefault();
 	}
 
-	/// <summary>
-	///		Deletes the files for a named save file.
-	/// </summary>
-	/// <param name="rootPath">The root path to the save folder.</param>
-	/// <param name="fileName">The file name to use (in FileName.Extension format.)</param>
-	/// <returns>True if the file was deleted, otherwise false.</returns>
-	public static bool DeleteGame(string rootPath, string fileName)
+	///  <summary>
+	/// 		Deletes the files for a named save file.
+	///  </summary>
+	///  <param name="rootPath">The root path to the save folder.</param>
+	///  <param name="fileName">The file name to use (in FileName.Extension format.)</param>
+	///  <param name="callback">A callback invoked after the save has been deleted.</param>
+	///  <returns>True if the file was deleted, otherwise false.</returns>
+	public static bool DeleteGame(string rootPath, string fileName, Action<string> callback)
 	{
 		var directoryInfo = new DirectoryInfo(rootPath);
 		if (!directoryInfo.Exists)
@@ -183,6 +184,8 @@ public static class SafeSaveHelper
 
 			fileInfo.Delete();
 		}
+
+		callback?.Invoke(fileName);
 
 		return true;
 	}

@@ -95,7 +95,7 @@ public abstract class SaveManagerBase
 
 	public void DeleteSave(string fileNameWithoutExtension)
 	{
-		SafeSaveHelper.DeleteGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension));
+		SafeSaveHelper.DeleteGame(RootPath, SafeSaveHelper.AddFileExtension(fileNameWithoutExtension, FileExtension), OnSaveDeleted);
 	}
 
 	public void Export(string exportFileName, int compressionLevel = 3, string password = null)
@@ -126,5 +126,6 @@ public abstract class SaveManagerBase
 	protected virtual void OnUpdate(float deltaInSeconds) { }
 	protected abstract void OnSaveRequested(SaveType saveType, string fullFilePath);
 	protected abstract bool OnLoadRequested(string fullFilePath);
+	protected abstract void OnSaveDeleted(string saveName);
 	#endregion
 }

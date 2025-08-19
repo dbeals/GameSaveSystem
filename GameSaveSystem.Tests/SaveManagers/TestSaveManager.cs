@@ -94,5 +94,10 @@ public sealed class TestSaveManager : SaveManagerBase
 			return false;
 		}
 	}
+
+	protected override void OnSaveDeleted(string saveName)
+	{
+		// This is a good place to delete any files related to the save file itself.
+	}
 	#endregion
 }

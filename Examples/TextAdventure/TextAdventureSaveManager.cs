@@ -54,6 +54,8 @@ public class TextAdventureSaveManager : ExampleSaveManagerBase<TextAdventureGame
 		CurrentGameState = newState;
 	}
 
+	protected override void OnSaveDeleted(string saveName) { }
+
 	protected override void HandleLoadError(string filePath, LoadResult error)
 	{
 		if (CurrentGameState == null)
